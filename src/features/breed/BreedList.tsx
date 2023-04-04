@@ -9,7 +9,6 @@ import { breedResponse } from '../mocks/breed';
 export function BreedList() {
   const mockBreedData = breedResponse
   return (
-    // <ImageList sx={{ width: 500, height: 450 }}>
     <ImageList>
       {mockBreedData.data.map((item) => (
         <ImageListItem key={item.id}>

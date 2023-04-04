@@ -5,6 +5,7 @@ import { appTheme } from './config/theme';
 import { Route, Routes } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { BreedList } from './features/breed/BreedList';
+import { BreedInfo } from './features/breed/BreedInfo';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
           <Routes>
           <Route path="/" element={<BreedList/>} />
             <Route path="/breeds" element={<BreedList/>} />
-
+            <Route path="/breeds/:id" element={<BreedInfo/>} />
             <Route path="*" element={
               <Box>
                 <Typography variant="h1">
