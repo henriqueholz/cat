@@ -1,4 +1,5 @@
 export interface Breed {
+  favorite?:          boolean;
   weight:             Weight;
   id:                 string;
   name:               string;

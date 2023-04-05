@@ -1,28 +1,40 @@
-import React from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { ArrowBack } from '@mui/icons-material';
+import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
 
-export function Header() {
+export const Header = () => {
+	const location = useLocation();
+  
+  const isCatDetailsPage = () => location.pathname.split("/")[1] !== ""
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <ArrowBack />
-          </IconButton>
+          {isCatDetailsPage() ?
+          <Link to="/">
+            <IconButton
+              size="large"
+              edge="start"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <ArrowBack />
+            </IconButton>
+          </Link>
+
+            :
+            ""
+          }
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Cat list
+            { isCatDetailsPage() ? "Cat Details" : "Cat List" }
           </Typography>
+
         </Toolbar>
       </AppBar>
     </Box>  

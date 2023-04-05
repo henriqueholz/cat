@@ -1,11 +1,10 @@
-export const breedResponse = {
-  data: [{
+export const breedResponse = [{
     "weight": {
       "imperial": "7  -  10",
       "metric": "3 - 5"
     },
-    "id": "abys",
-    "name": "Abyssinian",
+    "id": "babys",
+    "name": "Babyssinian",
     "cfa_url": "http://cfa.org/Breeds/BreedsAB/Abyssinian.aspx",
     "vetstreet_url": "http://www.vetstreet.com/cats/abyssinian",
     "vcahospitals_url": "https://vcahospitals.com/know-your-pet/cat-breeds/abyssinian",
@@ -405,4 +404,4 @@ export const breedResponse = {
     "hypoallergenic": 0,
     "reference_image_id": "5AdhMjeEu"
   }
-]}
+]
