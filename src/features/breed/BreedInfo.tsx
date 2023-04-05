@@ -3,16 +3,20 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import IconButton from '@mui/material/IconButton';
-import { breedResponse } from '../mocks/breed';
 import { useParams } from 'react-router-dom';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Breed } from '../../types/Breeds';
-import { useAppSelector } from '../../app/hooks';
-import { selectBreedById } from './breedSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { favoriteBreed, selectBreedById } from './breedSlice';
 
-export function BreedInfo() {
+export const BreedInfo = () => {
   const id = useParams().id as string;
-  const breed = useAppSelector((state) => selectBreedById(state, id)) as Breed;
+  const breed = useAppSelector((state) => selectBreedById(state, id)) as Breed; 
+  const dispatch = useAppDispatch()
+
+  const handleFavoriteBreed = () => {
+    dispatch(favoriteBreed(id))
+  }
 
   return (
     <ImageList>
@@ -30,8 +34,9 @@ export function BreedInfo() {
             <IconButton
               sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
               aria-label={`info about ${breed.name}`}
+              onClick={handleFavoriteBreed}
             >
-              <FavoriteBorder />
+              { breed.favorite ? <Favorite /> : <FavoriteBorder />}  
             </IconButton>
           }
         />

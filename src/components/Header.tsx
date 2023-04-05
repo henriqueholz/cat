@@ -27,14 +27,12 @@ export const Header = () => {
               <ArrowBack />
             </IconButton>
           </Link>
-
             :
             ""
           }
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             { isCatDetailsPage() ? "Cat Details" : "Cat List" }
           </Typography>
-
         </Toolbar>
       </AppBar>
     </Box>  

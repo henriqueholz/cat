@@ -102,6 +102,10 @@ const breedsSlice = createSlice({
   name: 'breeds',
   initialState,
   reducers: {
+    favoriteBreed(state, action) {
+      const index = state.findIndex(breed => breed.id === action.payload)
+      state[index].favorite = !state[index].favorite
+    }
   }
 })
 
