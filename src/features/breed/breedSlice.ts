@@ -95,7 +95,7 @@ export const breed: Breed = {
 export const initialState: Breed[] = 
   [
     breed,
-    { ...breed, id: "aege"}
+    { ...breed, name: "Beta", id: "aege", origin: "Jamaica", life_span: "1 - 2"}
   ];
 
 const breedsSlice = createSlice({

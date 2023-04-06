@@ -8,6 +8,7 @@ import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Breed } from '../../types/Breeds';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { favoriteBreed, selectBreedById } from './breedSlice';
+import { Button } from '@mui/material';
 
 export const BreedInfo = () => {
   const id = useParams().id as string;
@@ -36,7 +37,10 @@ export const BreedInfo = () => {
               aria-label={`info about ${breed.name}`}
               onClick={handleFavoriteBreed}
             >
-              { breed.favorite ? <Favorite /> : <FavoriteBorder />}  
+              {breed.favorite ? <Favorite /> : <FavoriteBorder /> } 
+              {/* <Button
+                startDecorator={breed.favorite ? <Favorite /> : <FavoriteBorder /> } 
+              /> */}
             </IconButton>
           }
         />
