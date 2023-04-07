@@ -7,10 +7,12 @@ import {
 } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
 import { favoriteListReducer } from "../features/breed/favoriteListSlice";
+import { breedListReducer } from "../features/breed/breedListSlice";
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   favoriteListSlice: favoriteListReducer,
+  breedListSlice: breedListReducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

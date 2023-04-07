@@ -11,9 +11,10 @@ import { breedResponse } from '../mocks/breed';
 import { useGetBreedsQuery } from './breedApiSlice';
 import { Favorite } from '@mui/icons-material';
 import { favoriteBreed } from './favoriteListSlice';
+import { selectBreedList, uploadBreedList } from './breedListSlice';
 
 export const BreedList = () => {
-  const [breedList, setBreedList] = useState<Breed[]>(breedResponse)
+  const [breedList, setBreedList] = useState<Breed[]>([])
   const [nameFilter, setNameFilter] = useState<string>("")
   const [imperialWeightFilter, setImperialWeightFilter] = useState<number | "">("")
   const [lifespanFilter, setLifespanFilter] = useState<number | "">("")
@@ -28,8 +29,11 @@ export const BreedList = () => {
   const { data, isFetching, error } = useGetBreedsQuery(options);
   const dispatch = useAppDispatch()
 
+  // useAppSelector((state) => selectBreedList(state)); 
+
   useEffect(() => {
     if (data !== undefined) {
+      dispatch(uploadBreedList(data))
       setBreedList(data as Breed[])
     }
   }, [data])
