@@ -9,19 +9,19 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Breed } from '../../types/Breeds';
 import { breedResponse } from '../mocks/breed';
 import { useGetBreedsQuery } from './breedApiSlice';
-import { Favorite } from '@mui/icons-material';
-import { favoriteBreed } from './favoriteListSlice';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { favoriteBreed, selectFavorites, unfavoriteBreed } from './favoriteListSlice';
 import { selectBreedList, uploadBreedList } from './breedListSlice';
 import { addFilter } from './filterSlice';
 
 export const BreedList = () => {
-  const [breedList, setBreedList] = useState<Breed[]>([])
+  const [breedList, setBreedList] = useState<Breed[]>([]) // api data with favorite attribute
+  const [filteredBreedList, setFilteredBreedList] = useState<Breed[]>([]) // breed list data with filters
   const [nameFilter, setNameFilter] = useState<string>("")
   const [imperialWeightFilter, setImperialWeightFilter] = useState<number | "">("")
   const [lifespanFilter, setLifespanFilter] = useState<number | "">("")
   const [favoriteFilter, setFavoriteFilter] = useState<boolean>(false)
   const [originFilter, setOriginFilter] = useState<string>("")
-  const [originFilterList, setOriginFilterList] = useState<string[]>(["Egypt"])
   const [options, setOptions] = useState({
     page: 1,
     limit: 10
@@ -31,11 +31,22 @@ export const BreedList = () => {
   const dispatch = useAppDispatch()
 
   // useAppSelector((state) => selectBreedList(state)); 
+  const favoriteList = useAppSelector((state) => selectFavorites(state)); 
+
+  const updateBreedList = (data: Breed[]): Breed[] => {
+    const newBreedList: Breed[] = data.map(breed => ({
+      ...breed,
+      favorite: favoriteList.find(favoriteBreed => breed.id === favoriteBreed.id) ? true : false
+    }))
+    return newBreedList
+  }
 
   useEffect(() => {
     if (data !== undefined) {
-      dispatch(uploadBreedList(data))
-      setBreedList(data as Breed[])
+      // dispatch(uploadBreedList(data))
+      const breedWithFavoriteList = updateBreedList(data)
+      setBreedList(breedWithFavoriteList)
+      setFilteredBreedList(breedWithFavoriteList)
     }
   }, [data])
 
@@ -55,25 +66,6 @@ export const BreedList = () => {
     )
   }
 
-  const handleOriginChange = (event: SelectChangeEvent) => {
-    setOriginFilter(event.target.value);
-  };
-
-  const OriginSelect = () => {
-    return (
-      <FormControl sx={{ m: 1, minWidth: 100 }}>
-      <InputLabel>Origin</InputLabel>
-      <Select
-        value={originFilter}
-        label="Origin"
-        onChange={handleOriginChange}
-      >
-        {originFilterList.map(origin => <MenuItem key={origin} value={origin}>{origin}</MenuItem>)}
-      </Select>
-    </FormControl>
-    )
-  }
-
   const FavoriteCheckbox = () => {
     return (
       <FormControlLabel
@@ -90,47 +82,62 @@ export const BreedList = () => {
   }
 
   const handleFilter = () => {
-    const data = {
-      name: nameFilter,
-      origin: originFilter,
-      weight: imperialWeightFilter,
-      lifespan: lifespanFilter,
-      isFavorite: favoriteFilter,
-    }
-    dispatch(addFilter(data))
-
-    // setBreedList(data)
-    if (nameFilter !== undefined && nameFilter !== "") {
-      setBreedList(breedList => breedList.filter(breed => breed.name.toLowerCase().includes(nameFilter.toLowerCase())))
-    }
-    if (lifespanFilter !== undefined && lifespanFilter !== "") {
-      setBreedList(breedList => breedList.filter(breed => (lifespanFilter >= parseInt(breed.life_span.split("-")[0])) && lifespanFilter <= parseInt(breed.life_span.split("-")[1])))
-    }
-    if (imperialWeightFilter !== undefined && imperialWeightFilter !== "") {
-      setBreedList(breedList => breedList.filter(breed => (imperialWeightFilter >= parseInt(breed.weight.imperial.split("-")[0])) && imperialWeightFilter <= parseInt(breed.weight.imperial.split("-")[1])))
-    }
-    if (favoriteFilter) {
-      setBreedList(breedList => breedList.filter(breed => breed.favorite))
-    }
-    if (originFilter) {
-      console.log(originFilter)
-      setBreedList(breedList => breedList.filter(breed => breed.origin === originFilter))
+    if (data !== undefined) {
+      const filterData = {
+        name: nameFilter,
+        origin: originFilter,
+        weight: imperialWeightFilter,
+        lifespan: lifespanFilter,
+        isFavorite: favoriteFilter,
+      }
+      dispatch(addFilter(filterData))
+  
+      const breedWithFavoriteList = updateBreedList(data)
+      setFilteredBreedList(breedWithFavoriteList)
+      if (nameFilter !== undefined && nameFilter !== "") {
+        setFilteredBreedList(breedList => breedList.filter(breed => breed.name.toLowerCase().includes(nameFilter.toLowerCase())))
+      }
+      if (lifespanFilter !== undefined && lifespanFilter !== "") {
+        setFilteredBreedList(breedList => breedList.filter(breed => (lifespanFilter >= parseInt(breed.life_span.split("-")[0])) && lifespanFilter <= parseInt(breed.life_span.split("-")[1])))
+      }
+      if (imperialWeightFilter !== undefined && imperialWeightFilter !== "") {
+        setFilteredBreedList(breedList => breedList.filter(breed => (imperialWeightFilter >= parseInt(breed.weight.imperial.split("-")[0])) && imperialWeightFilter <= parseInt(breed.weight.imperial.split("-")[1])))
+      }
+      if (favoriteFilter) {
+        console.log(filteredBreedList)
+        setFilteredBreedList(breedList => breedList.filter(breed => breed.favorite))
+        console.log(filteredBreedList)
+      }
+      if (originFilter) {
+        setFilteredBreedList(breedList => breedList.filter(breed => breed.origin.toLowerCase().includes(originFilter.toLowerCase())))
+      }
     }
   }
 
   const handleReset = () => {
-    // setBreedList(breeds)
-    setNameFilter("")
-    setImperialWeightFilter("")
-    setLifespanFilter("")
-    setFavoriteFilter(false)
-    setOriginFilter("")
+    if (data !== undefined) {
+      setFilteredBreedList(breedList) 
+      setNameFilter("")
+      setImperialWeightFilter("")
+      setLifespanFilter("")
+      setFavoriteFilter(false)
+      setOriginFilter("")
+    }
   }
 
   const handleFavoriteBreed = (e: React.MouseEvent<HTMLButtonElement>, breed: Breed) => {
     e.preventDefault()
-    // Add the cat into the redux cached favorites list
-    dispatch(favoriteBreed(breed))
+    console.log(breed.favorite)
+    if (breed.favorite) {
+      // Remove the cat from the redux cached favorites list
+      dispatch(unfavoriteBreed(breed.id))
+    } else {
+      // Add the cat into the redux cached favorites list
+      dispatch(favoriteBreed(breed))
+    }
+
+    const newFilteredBreedList = [...filteredBreedList]
+    setFilteredBreedList(newFilteredBreedList.map(item => item.id === breed.id ? {...item, favorite: !item.favorite} : item))
   }
 
   return (
@@ -153,6 +160,15 @@ export const BreedList = () => {
             />
           </FormControl>
           <FormControl>
+            <InputLabel>Origin</InputLabel>
+            <OutlinedInput
+              id="origin"
+              label="Origin"
+              value={originFilter}
+              onChange={(e) => setOriginFilter(e.target.value)}
+            />
+          </FormControl>   
+          <FormControl>
             <InputLabel>Lifespan</InputLabel>
             <OutlinedInput
               id="lifespan"
@@ -172,8 +188,7 @@ export const BreedList = () => {
               onChange={(e) => setImperialWeightFilter(parseInt(e.target.value))}
             />
 
-          </FormControl>
-          <OriginSelect/>
+          </FormControl>       
           <FavoriteCheckbox/>
           <SearchButton />
           <ResetButton />
@@ -181,7 +196,7 @@ export const BreedList = () => {
       <ImageList>
       {/* <ImageListItem key="Subheader" cols={2}>
       </ImageListItem> */}
-        {breedList.map((item) => (
+        {filteredBreedList.map((item) => (
           <Link to={`/${item.id}`} key={item.id}>
             <ImageListItem>
               <img
@@ -199,7 +214,7 @@ export const BreedList = () => {
                     aria-label={`info about ${item.name}`}
                     onClick={(e) => handleFavoriteBreed(e, item)}
                   >
-                     <Favorite />
+                     {item.favorite ? <Favorite /> : <FavoriteBorder /> } 
                   </IconButton>
                 }
               />

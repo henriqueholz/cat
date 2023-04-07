@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { useParams } from 'react-router-dom';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Breed } from '../../types/Breeds';
-import { favoriteBreed, findFavoriteById } from './favoriteListSlice';
+import { favoriteBreed, findFavoriteById, unfavoriteBreed } from './favoriteListSlice';
 import { useCreateFavoriteMutation, useGetBreedQuery } from './breedApiSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
@@ -22,18 +22,24 @@ export const BreedInfo = () => {
   const isFavorite = useAppSelector((state) => findFavoriteById(state, id)); 
 
   useEffect(() => {
-    console.log(isFavorite)
-  }, [isFavorite]);
-
-  useEffect(() => {
     if (data !== undefined) {
       setBreedState(data);
     }
   }, [data]);
 
   const handleFavoriteBreed = () => {
-    // Add the cat into the redux cached favorites list
-    dispatch(favoriteBreed(breedState))
+    if (breedState != undefined) {
+      if (breedState.favorite) {
+        // Remove the cat into the redux cached favorites list
+        dispatch(unfavoriteBreed(breedState.id))
+      } else {
+        // Add the cat into the redux cached favorites list
+        dispatch(favoriteBreed(breedState))
+      }
+  
+      const newBreedState = {...breedState, favorite: !breedState.favorite} as Breed
+      setBreedState(newBreedState)
+    }
   }
 
   return (

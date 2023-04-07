@@ -18,6 +18,12 @@ const favoriteListSlice = createSlice({
       const index = state.data.findIndex(favorite => favorite.id === action.payload.id)
       if (index === -1) {
         state.data.push({ ...action.payload });
+      } 
+    },
+    unfavoriteBreed(state, action: PayloadAction<string>) {
+      const index = state.data.findIndex((breed) => breed.id === action.payload);
+      if (index !== -1) {
+        state.data.splice(index, 1);
       }
     }
   }
@@ -29,9 +35,14 @@ export const findFavoriteById = (state: RootState, id: string) => {
   return favoriteList.data.findIndex(data => data.id === id)
 }
 
+export const selectFavorites = (state: RootState) => {
+  const favoriteList= state.favoriteListSlice as FavoriteList
+  return favoriteList.data
+}
+
 export default favoriteListSlice.reducer
 
-export const { favoriteBreed } =
+export const { favoriteBreed, unfavoriteBreed } =
 favoriteListSlice.actions
 
 export const favoriteListReducer = favoriteListSlice.reducer;
