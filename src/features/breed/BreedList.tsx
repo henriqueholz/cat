@@ -12,6 +12,7 @@ import { useGetBreedsQuery } from './breedApiSlice';
 import { Favorite } from '@mui/icons-material';
 import { favoriteBreed } from './favoriteListSlice';
 import { selectBreedList, uploadBreedList } from './breedListSlice';
+import { addFilter } from './filterSlice';
 
 export const BreedList = () => {
   const [breedList, setBreedList] = useState<Breed[]>([])
@@ -89,6 +90,15 @@ export const BreedList = () => {
   }
 
   const handleFilter = () => {
+    const data = {
+      name: nameFilter,
+      origin: originFilter,
+      weight: imperialWeightFilter,
+      lifespan: lifespanFilter,
+      isFavorite: favoriteFilter,
+    }
+    dispatch(addFilter(data))
+
     // setBreedList(data)
     if (nameFilter !== undefined && nameFilter !== "") {
       setBreedList(breedList => breedList.filter(breed => breed.name.toLowerCase().includes(nameFilter.toLowerCase())))

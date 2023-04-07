@@ -8,12 +8,14 @@ import {
 import { apiSlice } from "../features/api/apiSlice";
 import { favoriteListReducer } from "../features/breed/favoriteListSlice";
 import { breedListReducer } from "../features/breed/breedListSlice";
+import { filterReducer } from "../features/breed/filterSlice";
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   favoriteListSlice: favoriteListReducer,
   breedListSlice: breedListReducer,
-});
+  filterSlice: filterReducer
+})
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
