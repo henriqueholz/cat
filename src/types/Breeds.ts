@@ -43,3 +43,8 @@ export interface Weight {
   imperial: string;
   metric:   string;
 }
+
+export interface BreedParams {
+  limit: number;
+  page:  number;
+}
