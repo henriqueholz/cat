@@ -3,23 +3,37 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
 import { Box, Button, FormControl, InputLabel, ListSubheader, OutlinedInput, Select, Stack, MenuItem, Checkbox, FormControlLabel, SelectChangeEvent, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../../app/hooks';
-import { selectBreeds } from './breedSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Breed } from '../../types/Breeds';
+import { breedResponse } from '../mocks/breed';
+import { useGetBreedsQuery } from './breedApiSlice';
+import { Favorite } from '@mui/icons-material';
+import { favoriteBreed } from './favoriteListSlice';
 
 export const BreedList = () => {
-  const breeds = useAppSelector(selectBreeds) as Breed[];
-  const [breedList, setBreedList] = useState<Breed[]>(breeds)
+  const [breedList, setBreedList] = useState<Breed[]>(breedResponse)
   const [nameFilter, setNameFilter] = useState<string>("")
   const [imperialWeightFilter, setImperialWeightFilter] = useState<number | "">("")
   const [lifespanFilter, setLifespanFilter] = useState<number | "">("")
   const [favoriteFilter, setFavoriteFilter] = useState<boolean>(false)
   const [originFilter, setOriginFilter] = useState<string>("")
   const [originFilterList, setOriginFilterList] = useState<string[]>(["Egypt"])
-  
+  const [options, setOptions] = useState({
+    page: 1,
+    limit: 10
+  });
+
+  const { data, isFetching, error } = useGetBreedsQuery(options);
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setBreedList(data as Breed[])
+    }
+  }, [data])
+
   const title = (item: Breed) => `${item.name} | Origin: ${item.origin}`
 
   const subtitle = (item: Breed) => `Lifespan: ${item.life_span} | Weight: ${item.weight.imperial}`
@@ -71,7 +85,7 @@ export const BreedList = () => {
   }
 
   const handleFilter = () => {
-    setBreedList(breeds)
+    // setBreedList(data)
     if (nameFilter !== undefined && nameFilter !== "") {
       setBreedList(breedList => breedList.filter(breed => breed.name.toLowerCase().includes(nameFilter.toLowerCase())))
     }
@@ -91,7 +105,7 @@ export const BreedList = () => {
   }
 
   const handleReset = () => {
-    setBreedList(breeds)
+    // setBreedList(breeds)
     setNameFilter("")
     setImperialWeightFilter("")
     setLifespanFilter("")
@@ -99,9 +113,15 @@ export const BreedList = () => {
     setOriginFilter("")
   }
 
+  const handleFavoriteBreed = (e: React.MouseEvent<HTMLButtonElement>, breed: Breed) => {
+    e.preventDefault()
+    // Add the cat into the redux cached favorites list
+    dispatch(favoriteBreed(breed))
+  }
+
   return (
     <>
-       <Box
+      <Box
         component="form"
         sx={{
           '& > :not(style)': { m: 1 },
@@ -163,15 +183,16 @@ export const BreedList = () => {
                   <IconButton
                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                     aria-label={`info about ${item.name}`}
+                    onClick={(e) => handleFavoriteBreed(e, item)}
                   >
-                    <InfoIcon />
+                     <Favorite />
                   </IconButton>
                 }
               />
             </ImageListItem>
           </Link>
       ))}
-    </ImageList>
+      </ImageList>
     </>
   );
 }

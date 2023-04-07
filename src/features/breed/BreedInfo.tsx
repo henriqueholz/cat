@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
@@ -6,45 +6,61 @@ import IconButton from '@mui/material/IconButton';
 import { useParams } from 'react-router-dom';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Breed } from '../../types/Breeds';
+import { favoriteBreed, findFavoriteById } from './favoriteListSlice';
+import { useCreateFavoriteMutation, useGetBreedQuery } from './breedApiSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { favoriteBreed, selectBreedById } from './breedSlice';
-import { Button } from '@mui/material';
+
 
 export const BreedInfo = () => {
   const id = useParams().id as string;
-  const breed = useAppSelector((state) => selectBreedById(state, id)) as Breed; 
+  const { data, isFetching } = useGetBreedQuery({ id });
+  const [breedState, setBreedState] = useState<Breed>()
+  const [createFavourite, status] = useCreateFavoriteMutation();
+  const subId = process.env.REACT_APP_SUB_ID as string
   const dispatch = useAppDispatch()
 
+  const isFavorite = useAppSelector((state) => findFavoriteById(state, id)); 
+
+  useEffect(() => {
+    console.log(isFavorite)
+  }, [isFavorite]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setBreedState(data);
+    }
+  }, [data]);
+
   const handleFavoriteBreed = () => {
-    dispatch(favoriteBreed(id))
+    // Add the cat into the redux cached favorites list
+    dispatch(favoriteBreed(breedState))
   }
 
   return (
     <ImageList>
-      <ImageListItem key={breed.id}>
+      {breedState !== undefined ? 
+      <ImageListItem key={breedState.id}>
         <img
-          src={`https://cdn2.thecatapi.com/images/${breed.reference_image_id}.jpg`}
-          srcSet={`https://cdn2.thecatapi.com/images/${breed.reference_image_id}.jpg`}
-          alt={breed.name}
+          src={`https://cdn2.thecatapi.com/images/${breedState.reference_image_id}.jpg`}
+          srcSet={`https://cdn2.thecatapi.com/images/${breedState.reference_image_id}.jpg`}
+          alt={breedState.name}
           loading="lazy"
         />
         <ImageListItemBar
-          title={breed.name}
+          title={breedState.name}
           // subtitle={item.life_span}
           actionIcon={
             <IconButton
               sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-              aria-label={`info about ${breed.name}`}
-              onClick={handleFavoriteBreed}
+              aria-label={`info about ${breedState.name}`}
+              onClick={() => handleFavoriteBreed()}
             >
-              {breed.favorite ? <Favorite /> : <FavoriteBorder /> } 
-              {/* <Button
-                startDecorator={breed.favorite ? <Favorite /> : <FavoriteBorder /> } 
-              /> */}
+              {isFavorite !== -1 ? <Favorite /> : <FavoriteBorder /> } 
             </IconButton>
           }
         />
       </ImageListItem>   
+      : "" }
     </ImageList>
   );
 }
