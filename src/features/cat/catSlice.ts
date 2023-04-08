@@ -18,18 +18,19 @@ const catListSlice = createSlice({
     uploadCatList(state, action: PayloadAction<Breed[]>) {
       state.fullList = action.payload
     },
+    updateCat(state, action: PayloadAction<Breed>) {
+      const fullList = state.fullList as Breed[]
+      const index = fullList.findIndex(cat => cat.id === action.payload.id)
+      if (index !== -1) {
+        state.fullList[index] = action.payload
+      } 
+    },
     updateFavoriteList(state, action: PayloadAction<Breed>) {
       const fullList = state.fullList as Breed[]
       const fullListIndex = fullList.findIndex(cat => cat.id === action.payload.id)
-      console.log(fullListIndex)
-
       if (fullListIndex !== -1) {
-        console.log(state.fullList[fullListIndex].favorite)
-
         state.fullList[fullListIndex] = {...action.payload, favorite: !state.fullList[fullListIndex].favorite}
-        console.log(state.fullList[fullListIndex].favorite)
       } 
-
       const favoriteIndex = state.favoriteList.findIndex(favorite => favorite.id === action.payload.id)
       if (favoriteIndex === -1) {
         state.favoriteList.push({ ...action.payload })
@@ -48,7 +49,6 @@ export const selectCatList = (state: RootState) => {
 
 export const selectCat = (state: RootState, id: string) => {
   const catList = state.catListSlice as CatList
-  console.log(catList)
   return catList.fullList.find(cat => cat.id === id)
 }
 
@@ -59,7 +59,7 @@ export const selectFavorites = (state: RootState) => {
 
 export default catListSlice.reducer
 
-export const { uploadCatList, updateFavoriteList } =
+export const { uploadCatList, updateCat, updateFavoriteList } =
 catListSlice.actions
 
 export const catListReducer = catListSlice.reducer;
