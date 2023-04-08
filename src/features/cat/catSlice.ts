@@ -15,7 +15,7 @@ const catListSlice = createSlice({
   name: 'CatList',
   initialState,
   reducers: {
-    uploadCatList(state, action: PayloadAction<Breed[]>) {
+    updateCatList(state, action: PayloadAction<Breed[]>) {
       state.fullList = action.payload
     },
     updateCat(state, action: PayloadAction<Breed>) {
@@ -59,7 +59,7 @@ export const selectFavorites = (state: RootState) => {
 
 export default catListSlice.reducer
 
-export const { uploadCatList, updateCat, updateFavoriteList } =
+export const { updateCatList, updateCat, updateFavoriteList } =
 catListSlice.actions
 
 export const catListReducer = catListSlice.reducer;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetBreedsQuery } from './catApiSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectCat, uploadCatList } from './catSlice'
+import { selectCat, updateCatList } from './catSlice'
 import { UploadCatImageButton } from './components/UploadCatImageButton'
 import { RemoveCatImageButton } from './components/RemoveCatImageButton'
 import { ImageItem } from './components/ImageItem'
@@ -20,7 +20,7 @@ export const BreedInfo = () => {
 
   useEffect(() => {
     if (cat === undefined && data !== undefined) {
-      dispatch(uploadCatList(data))
+      dispatch(updateCatList(data))
     }
   }, [data])
 
