@@ -6,7 +6,7 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
-import { catListReducer } from "../features/cat/catListSlice";
+import { catListReducer } from "../features/cat/catSlice";
 import { filterReducer } from "../features/cat/filterSlice";
 import { sortingReducer } from "../features/cat/sortingSlice";
 

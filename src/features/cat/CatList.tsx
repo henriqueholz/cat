@@ -20,18 +20,14 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { Breed } from '../../types/Breeds'
 import { useGetBreedsQuery } from './catApiSlice'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
-// import {
-//   favoriteBreed,
-//   selectFavorites,
-//   unfavoriteBreed
-// } from './favoriteListSlice'
 import {
   selectCatList,
   selectFavorites,
   updateFavoriteList,
   uploadCatList
-} from './catListSlice'
+} from './catSlice'
 import { addFilter } from './filterSlice'
+import { FavoriteCatButton } from './components/FavoriteCatButton'
 
 export const BreedList = () => {
   const [filteredBreedList, setFilteredBreedList] = useState<Breed[]>([]) // Filtered and sorted breed list
@@ -64,17 +60,21 @@ export const BreedList = () => {
         ? true
         : false
     }))
-    console.log(newBreedList)
     return newBreedList
   }
 
   useEffect(() => {
     if (data !== undefined) {
+      console.log(data)
       const breedWithFavoriteList = mergeWithFavoriteList(data)
-      dispatch(uploadCatList(breedWithFavoriteList))
-      setFilteredBreedList(breedWithFavoriteList)
+      // dispatch(uploadCatList(breedWithFavoriteList))
+      setFilteredBreedList(data)
     }
   }, [data])
+
+  useEffect(() => {
+    console.log(breedList)
+  }, [breedList])
 
   const title = (item: Breed) => `${item.name} | Origin: ${item.origin}`
 
@@ -149,7 +149,6 @@ export const BreedList = () => {
 
   const SortbySelect = () => {
     return (
-      // <Box >
       <FormControl sx={{ minWidth: 160 }}>
         <InputLabel>Sort by</InputLabel>
         <Select
@@ -192,21 +191,6 @@ export const BreedList = () => {
       setFavoriteFilter(false)
       setOriginFilter('')
     }
-  }
-
-  const handleFavoriteBreed = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    breed: Breed
-  ) => {
-    e.preventDefault()
-    dispatch(updateFavoriteList(breed))
-
-    const newFilteredBreedList = [...filteredBreedList]
-    setFilteredBreedList(
-      newFilteredBreedList.map(item =>
-        item.id === breed.id ? { ...item, favorite: !item.favorite } : item
-      )
-    )
   }
 
   interface FilterObject {
@@ -305,7 +289,7 @@ export const BreedList = () => {
         <ResetButton />
       </Box>
       <ImageList>
-        {filteredBreedList.map(item => (
+        {breedList.map(item => (
           <Link to={`/${item.id}`} key={item.id}>
             <ImageListItem>
               <img
@@ -314,19 +298,7 @@ export const BreedList = () => {
                 alt={item.name}
                 loading="lazy"
               />
-              <ImageListItemBar
-                title={title(item)}
-                subtitle={subtitle(item)}
-                actionIcon={
-                  <IconButton
-                    sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                    aria-label={`info about ${item.name}`}
-                    onClick={e => handleFavoriteBreed(e, item)}
-                  >
-                    {item.favorite ? <Favorite /> : <FavoriteBorder />}
-                  </IconButton>
-                }
-              />
+              <FavoriteCatButton cat={item} preventDefault={true} />
             </ImageListItem>
           </Link>
         ))}

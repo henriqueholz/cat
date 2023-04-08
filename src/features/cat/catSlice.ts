@@ -19,10 +19,17 @@ const catListSlice = createSlice({
       state.fullList = action.payload
     },
     updateFavoriteList(state, action: PayloadAction<Breed>) {
-      const fullListIndex = state.fullList.findIndex(cat => cat.id === action.payload.id)
+      const fullList = state.fullList as Breed[]
+      const fullListIndex = fullList.findIndex(cat => cat.id === action.payload.id)
+      console.log(fullListIndex)
+
       if (fullListIndex !== -1) {
-        state.fullList[fullListIndex] = {...action.payload, favorite: !action.payload.favorite}
+        console.log(state.fullList[fullListIndex].favorite)
+
+        state.fullList[fullListIndex] = {...action.payload, favorite: !state.fullList[fullListIndex].favorite}
+        console.log(state.fullList[fullListIndex].favorite)
       } 
+
       const favoriteIndex = state.favoriteList.findIndex(favorite => favorite.id === action.payload.id)
       if (favoriteIndex === -1) {
         state.favoriteList.push({ ...action.payload })
@@ -37,6 +44,12 @@ const catListSlice = createSlice({
 export const selectCatList = (state: RootState) => {
   const catList = state.catListSlice as CatList
   return catList.fullList
+}
+
+export const selectCat = (state: RootState, id: string) => {
+  const catList = state.catListSlice as CatList
+  console.log(catList)
+  return catList.fullList.find(cat => cat.id === id)
 }
 
 export const selectFavorites = (state: RootState) => {

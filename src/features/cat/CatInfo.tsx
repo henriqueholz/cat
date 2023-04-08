@@ -1,102 +1,80 @@
 import React, { useEffect, useState } from 'react'
-import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import IconButton from '@mui/material/IconButton'
 import { useParams } from 'react-router-dom'
 import { Favorite, FavoriteBorder, Delete } from '@mui/icons-material'
 import { Breed } from '../../types/Breeds'
-// import {
-//   favoriteBreed,
-//   findFavoriteById,
-//   unfavoriteBreed
-// } from './favoriteListSlice'
-import { useCreateFavoriteMutation, useGetBreedQuery } from './catApiSlice'
+import {
+  useCreateFavoriteMutation,
+  useGetBreedQuery,
+  useGetBreedsQuery
+} from './catApiSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { Button } from '@mui/material'
-import { updateFavoriteList } from './catListSlice'
+import { updateFavoriteList, selectCat, uploadCatList } from './catSlice'
+import { FavoriteCatButton } from './components/FavoriteCatButton'
+import { ConsoleWriter } from 'istanbul-lib-report'
 
 export const BreedInfo = () => {
   const id = useParams().id as string
-  const { data, isFetching } = useGetBreedQuery({ id })
-  const [url, setUrl] = useState('')
-  const [breedState, setBreedState] = useState<Breed>()
+  const [options, setOptions] = useState({
+    page: 1,
+    limit: 10
+  })
+  const { data, isFetching, error } = useGetBreedsQuery(options) // Fetch date from the cat API
   const [createFavourite, status] = useCreateFavoriteMutation()
   const subId = process.env.REACT_APP_SUB_ID as string
   const dispatch = useAppDispatch()
 
-  // const isFavorite = useAppSelector(state => findFavoriteById(state, id))
+  const cat = useAppSelector(state => selectCat(state, id))
 
   useEffect(() => {
-    if (data !== undefined) {
-      setBreedState(data)
+    if (cat === undefined && data !== undefined) {
+      dispatch(uploadCatList(data))
     }
   }, [data])
 
-  useEffect(() => {
-    console.log(breedState)
-  }, [breedState])
+  // const RemovePersonalImageButton = () => {
+  //   const removeImage = () => {
+  //     const newImage = { ...cat, new_image: undefined } as Breed
+  //     setCat(newImage)
+  //   }
 
-  const handleFavoriteBreed = () => {
-    if (breedState !== undefined) {
-      dispatch(updateFavoriteList(breedState))
+  //   return (
+  //     <Button
+  //       variant="outlined"
+  //       startIcon={<Delete />}
+  //       onClick={() => removeImage()}
+  //     >
+  //       Delete
+  //     </Button>
+  //   )
+  // }
 
-      // if (breedState.favorite) {
-      //   // Remove the cat from the redux cached favorites list
-      //   dispatch(unfavoriteBreed(breedState.id))
-      // } else {
-      //   // Add the cat into the redux cached favorites list
-      //   dispatch(favoriteBreed(breedState))
-      // }
+  // const UploadControl = () => {
+  //   const uploadImage = e => {
+  //     const file = e.target.files[0]
+  //     getBase64(file).then(base64 => {
+  //       localStorage['fileBase64'] = base64
+  //       const newImage = { ...cat, new_image: base64 } as Breed
+  //       setCat(newImage)
+  //     })
+  //   }
 
-      const newBreedState = {
-        ...breedState,
-        favorite: !breedState.favorite
-      } as Breed
-      setBreedState(newBreedState)
-    }
-  }
-
-  const RemovePersonalImageButton = () => {
-    const removeImage = () => {
-      const newImage = { ...breedState, new_image: undefined } as Breed
-      setBreedState(newImage)
-    }
-
-    return (
-      <Button
-        variant="outlined"
-        startIcon={<Delete />}
-        onClick={() => removeImage()}
-      >
-        Delete
-      </Button>
-    )
-  }
-
-  const UploadControl = () => {
-    const uploadImage = e => {
-      const file = e.target.files[0]
-      getBase64(file).then(base64 => {
-        localStorage['fileBase64'] = base64
-        const newImage = { ...breedState, new_image: base64 } as Breed
-        setBreedState(newImage)
-      })
-    }
-
-    return (
-      <Button variant="contained" component="label">
-        Upload
-        <input
-          hidden
-          accept="image/*"
-          multiple
-          type="file"
-          onChange={e => uploadImage(e)}
-        />
-      </Button>
-    )
-  }
+  //   return (
+  //     <Button variant="contained" component="label">
+  //       Upload
+  //       <input
+  //         hidden
+  //         accept="image/*"
+  //         multiple
+  //         type="file"
+  //         // onChange={e => uploadImage(e)}
+  //       />
+  //     </Button>
+  //   )
+  // }
 
   const getBase64 = file => {
     return new Promise((resolve, reject) => {
@@ -109,45 +87,32 @@ export const BreedInfo = () => {
 
   return (
     <>
-      {breedState !== undefined ? (
-        <ImageListItem key={breedState.id}>
+      {cat !== undefined ? (
+        <ImageListItem key={cat.id}>
           <img
             src={
-              breedState.new_image !== undefined
-                ? breedState.new_image
-                : `https://cdn2.thecatapi.com/images/${breedState.reference_image_id}.jpg`
+              cat.new_image !== undefined
+                ? cat.new_image
+                : `https://cdn2.thecatapi.com/images/${cat.reference_image_id}.jpg`
             }
             srcSet={
-              breedState.new_image !== undefined
-                ? breedState.new_image
-                : `https://cdn2.thecatapi.com/images/${breedState.reference_image_id}.jpg`
+              cat.new_image !== undefined
+                ? cat.new_image
+                : `https://cdn2.thecatapi.com/images/${cat.reference_image_id}.jpg`
             }
-            alt={breedState.name}
+            alt={cat.name}
             loading="lazy"
           />
-          <ImageListItemBar
-            title={breedState.name}
-            // subtitle={item.life_span}
-            actionIcon={
-              <IconButton
-                sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                aria-label={`info about ${breedState.name}`}
-                onClick={() => handleFavoriteBreed()}
-              >
-                <Favorite />
-              </IconButton>
-            }
-          />
+          <FavoriteCatButton cat={cat} />
         </ImageListItem>
       ) : (
-        // temperament, adaptability, affection level
         ''
       )}
-      <UploadControl />
-      <RemovePersonalImageButton />
-      <div>Temperament: {breedState?.temperament}</div>
-      <div>Adaptability: {breedState?.adaptability}</div>
-      <div>Affection: {breedState?.affection_level}</div>
+      {/* <UploadControl />
+      <RemovePersonalImageButton /> */}
+      <div>Temperament: {cat?.temperament}</div>
+      <div>Adaptability: {cat?.adaptability}</div>
+      <div>Affection: {cat?.affection_level}</div>
     </>
   )
 }
