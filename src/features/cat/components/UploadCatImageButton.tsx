@@ -23,7 +23,7 @@ export const UploadCatImageButton = ({ cat }: Props) => {
   const uploadImage = e => {
     const file = e.target.files[0]
     getBase64(file).then(base64 => {
-      localStorage['fileBase64'] = base64
+      localStorage[`cat:${cat.id}`] = base64
       const newCatData = { ...cat, new_image: base64 } as Breed
       dispatch(updateCat(newCatData))
     })
