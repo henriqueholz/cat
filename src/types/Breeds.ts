@@ -1,5 +1,6 @@
 export interface Breed {
   favorite?:          boolean;
+  new_image?:         string;
   weight:             Weight;
   id:                 string;
   name:               string;
