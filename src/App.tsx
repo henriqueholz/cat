@@ -1,38 +1,41 @@
-import { Box, ThemeProvider } from '@mui/system';
-import { Header } from './components/Header';
-import { Layout } from './components/Layout';
-import { appTheme } from './config/theme';
-import { Route, Routes } from 'react-router-dom';
-import { Typography } from '@mui/material';
-import { BreedList } from './features/breed/BreedList';
-import { BreedInfo } from './features/breed/BreedInfo';
-import React from 'react';
+import { Box, ThemeProvider } from '@mui/system'
+import { Header } from './components/Header'
+import { Layout } from './components/Layout'
+import { appTheme } from './config/theme'
+import { Route, Routes } from 'react-router-dom'
+import { Typography } from '@mui/material'
+import { BreedList } from './features/cat/CatList'
+import { BreedInfo } from './features/cat/CatInfo'
+import React from 'react'
 
 function App() {
   return (
     <ThemeProvider theme={appTheme}>
-      <Box component="main"
-      sx={{
-        height: "100vh",
-        backgroundColor: (theme) => theme.palette.grey[900],
-      }}>
-        <Header/>
+      <Box
+        component="main"
+        sx={{
+          height: '100vh',
+          backgroundColor: theme => theme.palette.grey[900]
+        }}
+      >
+        <Header />
         <Layout>
           <Routes>
-          <Route path="/" element={<BreedList/>} />
-            <Route path="/:id" element={<BreedInfo/>} />
-            <Route path="*" element={
-              <Box>
-                <Typography variant="h1">
-                  404
-                </Typography>
-            </Box>
-            } />
+            <Route path="/" element={<BreedList />} />
+            <Route path="/:id" element={<BreedInfo />} />
+            <Route
+              path="*"
+              element={
+                <Box>
+                  <Typography variant="h1">404</Typography>
+                </Box>
+              }
+            />
           </Routes>
         </Layout>
       </Box>
     </ThemeProvider>
-    );
+  )
 }
 
-export default App;
+export default App

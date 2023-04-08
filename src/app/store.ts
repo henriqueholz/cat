@@ -6,15 +6,13 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
-import { favoriteListReducer } from "../features/breed/favoriteListSlice";
-import { breedListReducer } from "../features/breed/breedListSlice";
-import { filterReducer } from "../features/breed/filterSlice";
-import { sortingReducer } from "../features/breed/sortingSlice";
+import { catListReducer } from "../features/cat/catListSlice";
+import { filterReducer } from "../features/cat/filterSlice";
+import { sortingReducer } from "../features/cat/sortingSlice";
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
-  favoriteListSlice: favoriteListReducer,
-  breedListSlice: breedListReducer,
+  catListSlice: catListReducer,
   filterSlice: filterReducer,
   sortingSlice: sortingReducer
 })

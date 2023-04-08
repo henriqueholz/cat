@@ -6,14 +6,15 @@ import IconButton from '@mui/material/IconButton'
 import { useParams } from 'react-router-dom'
 import { Favorite, FavoriteBorder, Delete } from '@mui/icons-material'
 import { Breed } from '../../types/Breeds'
-import {
-  favoriteBreed,
-  findFavoriteById,
-  unfavoriteBreed
-} from './favoriteListSlice'
-import { useCreateFavoriteMutation, useGetBreedQuery } from './breedApiSlice'
+// import {
+//   favoriteBreed,
+//   findFavoriteById,
+//   unfavoriteBreed
+// } from './favoriteListSlice'
+import { useCreateFavoriteMutation, useGetBreedQuery } from './catApiSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { Button } from '@mui/material'
+import { updateFavoriteList } from './catListSlice'
 
 export const BreedInfo = () => {
   const id = useParams().id as string
@@ -24,7 +25,7 @@ export const BreedInfo = () => {
   const subId = process.env.REACT_APP_SUB_ID as string
   const dispatch = useAppDispatch()
 
-  const isFavorite = useAppSelector(state => findFavoriteById(state, id))
+  // const isFavorite = useAppSelector(state => findFavoriteById(state, id))
 
   useEffect(() => {
     if (data !== undefined) {
@@ -38,13 +39,15 @@ export const BreedInfo = () => {
 
   const handleFavoriteBreed = () => {
     if (breedState !== undefined) {
-      if (breedState.favorite) {
-        // Remove the cat from the redux cached favorites list
-        dispatch(unfavoriteBreed(breedState.id))
-      } else {
-        // Add the cat into the redux cached favorites list
-        dispatch(favoriteBreed(breedState))
-      }
+      dispatch(updateFavoriteList(breedState))
+
+      // if (breedState.favorite) {
+      //   // Remove the cat from the redux cached favorites list
+      //   dispatch(unfavoriteBreed(breedState.id))
+      // } else {
+      //   // Add the cat into the redux cached favorites list
+      //   dispatch(favoriteBreed(breedState))
+      // }
 
       const newBreedState = {
         ...breedState,
@@ -131,7 +134,7 @@ export const BreedInfo = () => {
                 aria-label={`info about ${breedState.name}`}
                 onClick={() => handleFavoriteBreed()}
               >
-                {isFavorite !== -1 ? <Favorite /> : <FavoriteBorder />}
+                <Favorite />
               </IconButton>
             }
           />

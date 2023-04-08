@@ -18,14 +18,19 @@ import {
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { Breed } from '../../types/Breeds'
-import { useGetBreedsQuery } from './breedApiSlice'
+import { useGetBreedsQuery } from './catApiSlice'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
+// import {
+//   favoriteBreed,
+//   selectFavorites,
+//   unfavoriteBreed
+// } from './favoriteListSlice'
 import {
-  favoriteBreed,
+  selectCatList,
   selectFavorites,
-  unfavoriteBreed
-} from './favoriteListSlice'
-import { selectBreedList, uploadBreedList } from './breedListSlice'
+  updateFavoriteList,
+  uploadCatList
+} from './catListSlice'
 import { addFilter } from './filterSlice'
 
 export const BreedList = () => {
@@ -47,7 +52,7 @@ export const BreedList = () => {
   const { data, isFetching, error } = useGetBreedsQuery(options) // Fetch date from the cat API
   const dispatch = useAppDispatch()
 
-  const breedList = useAppSelector(state => selectBreedList(state)) // Cached breed list data with favorite and user_image
+  const breedList = useAppSelector(state => selectCatList(state)) // Cached breed list data with favorite and user_image
   const favoriteList = useAppSelector(state => selectFavorites(state)) // Cached favorite breed list
 
   const mergeWithFavoriteList = (data: Breed[]): Breed[] => {
@@ -59,13 +64,14 @@ export const BreedList = () => {
         ? true
         : false
     }))
+    console.log(newBreedList)
     return newBreedList
   }
 
   useEffect(() => {
     if (data !== undefined) {
       const breedWithFavoriteList = mergeWithFavoriteList(data)
-      dispatch(uploadBreedList(breedWithFavoriteList))
+      dispatch(uploadCatList(breedWithFavoriteList))
       setFilteredBreedList(breedWithFavoriteList)
     }
   }, [data])
@@ -193,14 +199,7 @@ export const BreedList = () => {
     breed: Breed
   ) => {
     e.preventDefault()
-    console.log(breed.favorite)
-    if (breed.favorite) {
-      // Remove the cat from the redux cached favorites list
-      dispatch(unfavoriteBreed(breed.id))
-    } else {
-      // Add the cat into the redux cached favorites list
-      dispatch(favoriteBreed(breed))
-    }
+    dispatch(updateFavoriteList(breed))
 
     const newFilteredBreedList = [...filteredBreedList]
     setFilteredBreedList(
