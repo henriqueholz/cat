@@ -13,7 +13,7 @@ export const BreedInfo = () => {
     page: 1,
     limit: 10
   })
-  const { data, isFetching, error } = useGetBreedsQuery(options) // Fetch date from the cat API
+  const { data, isFetching, error } = useGetBreedsQuery(options) // Fetch data from the cat API
   const dispatch = useAppDispatch()
 
   const cat = useAppSelector(state => selectCat(state, id))

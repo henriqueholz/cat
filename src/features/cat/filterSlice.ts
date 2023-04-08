@@ -1,10 +1,9 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store"
-import { Breed } from "../../types/Breeds";
+import { RootState } from "../../app/store";
 
 const { createSlice } = require('@reduxjs/toolkit')
 
-interface FilterAttributes {
+export interface FilterAttributes {
   name: string,
   origin: string,
   weight: number | "",
@@ -30,15 +29,21 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    addFilter(state, action: PayloadAction<FilterAttributes>) {
+    updateFilter(state, action: PayloadAction<FilterAttributes>) {
       state.data = action.payload
     }
   }
 })
 
+// Selectors
+export const selectFilter = (state: RootState) => {
+  const filter = state.filterSlice as FilterType
+  return filter.data
+}
+
 export default filterSlice.reducer
 
-export const { addFilter } =
+export const { updateFilter } =
 filterSlice.actions
 
 export const filterReducer = filterSlice.reducer;

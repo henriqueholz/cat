@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Button,
   FormControl,
@@ -8,22 +8,19 @@ import {
   FormControlLabel
 } from '@mui/material'
 import { Breed } from '../../../types/Breeds'
-import { useAppDispatch } from '../../../app/hooks'
-import { addFilter } from '../filterSlice'
+import { useAppDispatch, useAppSelector } from '../../../app/hooks'
+import { updateFilter, selectFilter, FilterAttributes } from '../filterSlice'
+import { selectCatList, updateFilteredList } from '../catSlice'
 
-type Props = {
-  cats: Breed[]
+interface FilterObject {
+  filterFunction: (breed: Breed) => boolean
+  active: boolean
 }
 
 export const FilterTab = () => {
-  const [nameFilter, setNameFilter] = useState<string>('')
-  const [imperialWeightFilter, setImperialWeightFilter] = useState<number | ''>(
-    ''
-  )
-  const [lifespanFilter, setLifespanFilter] = useState<number | ''>('')
-  const [favoriteFilter, setFavoriteFilter] = useState<boolean>(false)
-  const [originFilter, setOriginFilter] = useState<string>('')
   const dispatch = useAppDispatch()
+  const filter: FilterAttributes = useAppSelector(state => selectFilter(state))
+  const fullCatList = useAppSelector(state => selectCatList(state)) // Cached full cat list data with favorite and user_image
 
   const ApplyButton = () => {
     return (
@@ -46,7 +43,7 @@ export const FilterTab = () => {
       <FormControlLabel
         control={
           <Checkbox
-            checked={favoriteFilter}
+            checked={filter.isFavorite}
             onChange={handleFavoriteCheckbox}
             name="favorites"
           />
@@ -57,26 +54,63 @@ export const FilterTab = () => {
   }
 
   const handleFavoriteCheckbox = () => {
-    setFavoriteFilter(!favoriteFilter)
+    dispatch(updateFilter({ ...filter, isFavorite: !filter.isFavorite }))
   }
 
   const handleFilter = () => {
     const filterData = {
-      name: nameFilter,
-      origin: originFilter,
-      weight: imperialWeightFilter,
-      lifespan: lifespanFilter,
-      isFavorite: favoriteFilter
+      name: filter.name,
+      origin: filter.origin,
+      weight: filter.lifespan,
+      lifespan: filter.lifespan,
+      isFavorite: filter.isFavorite
     }
-    dispatch(addFilter(filterData))
+    dispatch(updateFilter(filterData))
+    dispatch(updateFilteredList(filterBreeds()))
   }
 
   const handleReset = () => {
-    setNameFilter('')
-    setImperialWeightFilter('')
-    setLifespanFilter('')
-    setFavoriteFilter(false)
-    setOriginFilter('')
+    dispatch(updateFilteredList(fullCatList))
+    dispatch(
+      updateFilter({ name: '', lifespan: '', origin: '', isFavorite: false })
+    )
+  }
+
+  const filters: FilterObject[] = [
+    {
+      filterFunction: (breed: Breed) =>
+        breed.name.toLowerCase().includes(filter.name.toLowerCase()),
+      active: !!filter.name
+    },
+    {
+      filterFunction: (breed: Breed) =>
+        breed.origin.toLowerCase().includes(filter.origin.toLowerCase()),
+      active: !!filter.origin
+    },
+    {
+      filterFunction: (breed: Breed) =>
+        Number(filter.lifespan) >= parseInt(breed.life_span.split('-')[0]) &&
+        Number(filter.lifespan) <= parseInt(breed.life_span.split('-')[1]),
+      active: !!filter.lifespan
+    },
+    {
+      filterFunction: (breed: Breed) =>
+        Number(filter.lifespan) >=
+          parseInt(breed.weight.imperial.split('-')[0]) &&
+        Number(filter.lifespan) <=
+          parseInt(breed.weight.imperial.split('-')[1]),
+      active: !!filter.lifespan
+    },
+    {
+      filterFunction: (breed: Breed) => breed.favorite === filter.isFavorite,
+      active: !!filter.isFavorite
+    }
+  ]
+
+  const filterBreeds = (): Breed[] => {
+    return fullCatList.filter(func =>
+      filters.every(filter => !filter.active || filter.filterFunction(func))
+    )
   }
 
   return (
@@ -86,8 +120,10 @@ export const FilterTab = () => {
         <OutlinedInput
           id="name"
           label="Name"
-          value={nameFilter}
-          onChange={e => setNameFilter(e.target.value)}
+          value={filter.name}
+          onChange={e =>
+            dispatch(updateFilter({ ...filter, name: e.target.value }))
+          }
         />
       </FormControl>
       <FormControl>
@@ -95,8 +131,10 @@ export const FilterTab = () => {
         <OutlinedInput
           id="origin"
           label="Origin"
-          value={originFilter}
-          onChange={e => setOriginFilter(e.target.value)}
+          value={filter.origin}
+          onChange={e =>
+            dispatch(updateFilter({ ...filter, origin: e.target.value }))
+          }
         />
       </FormControl>
       <FormControl>
@@ -104,9 +142,13 @@ export const FilterTab = () => {
         <OutlinedInput
           id="lifespan"
           label="Lifespan"
-          value={lifespanFilter}
+          value={filter.lifespan}
           type="number"
-          onChange={e => setLifespanFilter(parseInt(e.target.value))}
+          onChange={e =>
+            dispatch(
+              updateFilter({ ...filter, lifespan: parseInt(e.target.value) })
+            )
+          }
         />
       </FormControl>
       <FormControl>
@@ -114,9 +156,13 @@ export const FilterTab = () => {
         <OutlinedInput
           id="imperialWeight"
           label="Imperial Weight"
-          value={imperialWeightFilter}
+          value={filter.weight}
           type="number"
-          onChange={e => setImperialWeightFilter(parseInt(e.target.value))}
+          onChange={e =>
+            dispatch(
+              updateFilter({ ...filter, weight: parseInt(e.target.value) })
+            )
+          }
         />
       </FormControl>
       <FavoriteCheckbox />

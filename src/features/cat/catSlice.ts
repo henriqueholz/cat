@@ -6,10 +6,11 @@ const { createSlice } = require('@reduxjs/toolkit')
 
 interface CatList {
   fullList: Breed[],
-  favoriteList: Breed[]
+  favoriteList: Breed[],
+  filteredList: Breed[]
 }
 
-const initialState: CatList = { fullList : [], favoriteList: [] };
+const initialState: CatList = { fullList : [], favoriteList: [], filteredList: [] };
 
 const catListSlice = createSlice({
   name: 'CatList',
@@ -25,19 +26,35 @@ const catListSlice = createSlice({
         state.fullList[index] = action.payload
       } 
     },
-    updateFavoriteList(state, action: PayloadAction<Breed>) {
+    updateFavorite(state, action: PayloadAction<Breed>) {
       const fullList = state.fullList as Breed[]
       const fullListIndex = fullList.findIndex(cat => cat.id === action.payload.id)
+      const newFavoriteStatus = !action.payload.favorite
+      console.log(newFavoriteStatus)
       if (fullListIndex !== -1) {
-        state.fullList[fullListIndex] = {...action.payload, favorite: !state.fullList[fullListIndex].favorite}
+        // Replacing the cat current favorite status on the full list
+        state.fullList[fullListIndex] = {...action.payload, favorite: newFavoriteStatus}
       } 
+      const filteredIndex = state.filteredList.findIndex(filtered => filtered.id === action.payload.id)
+      console.log(filteredIndex)
+
+      if (filteredIndex !== -1) {
+        // Replacing the cat current favorite status on the filtered list
+        state.filteredList[filteredIndex] = {...action.payload, favorite: newFavoriteStatus}
+        console.log(state.filteredList[filteredIndex].favorite)
+      }
       const favoriteIndex = state.favoriteList.findIndex(favorite => favorite.id === action.payload.id)
       if (favoriteIndex === -1) {
+        // Adding the new cat into the favorite list
         state.favoriteList.push({ ...action.payload })
       } else {
+        // Removing the cat from the favorite list
         state.favoriteList.splice(favoriteIndex, 1);
       }
     },
+    updateFilteredList(state, action: PayloadAction<Breed[]>) {
+      state.filteredList = action.payload
+    }
   }
 })
 
@@ -57,9 +74,14 @@ export const selectFavorites = (state: RootState) => {
   return favoriteList.favoriteList
 }
 
+export const selectFilteredList = (state: RootState) => {
+  const catList = state.catListSlice as CatList
+  return catList.filteredList
+}
+
 export default catListSlice.reducer
 
-export const { updateCatList, updateCat, updateFavoriteList } =
+export const { updateCatList, updateCat, updateFavorite, updateFilteredList } =
 catListSlice.actions
 
 export const catListReducer = catListSlice.reducer;

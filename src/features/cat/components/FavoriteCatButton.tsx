@@ -4,7 +4,7 @@ import ImageListItemBar from '@mui/material/ImageListItemBar'
 import IconButton from '@mui/material/IconButton'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import { useAppDispatch } from '../../../app/hooks'
-import { updateFavoriteList } from '../catSlice'
+import { updateFavorite } from '../catSlice'
 
 type Props = {
   cat: Breed
@@ -19,7 +19,7 @@ export const FavoriteCatButton = ({ cat, preventDefault }: Props) => {
       e.preventDefault()
     }
     if (cat !== undefined) {
-      dispatch(updateFavoriteList(cat))
+      dispatch(updateFavorite(cat))
     }
   }
 
