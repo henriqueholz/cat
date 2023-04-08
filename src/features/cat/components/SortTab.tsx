@@ -4,7 +4,7 @@ import { selectCatList, updateFilteredList } from '../catSlice'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { selectSort, updateSort } from '../sortSlice'
 
-export const SortTab = ({}) => {
+export const SortTab = () => {
   const cats = useAppSelector(state => selectCatList(state)) // Cached cat list data with favorite and user_image
   const sort = useAppSelector(state => selectSort(state)) // Cached cat list data with favorite and user_image
 
@@ -12,14 +12,13 @@ export const SortTab = ({}) => {
 
   useEffect(() => {
     if (cats !== undefined) {
-      if (sort.data.toString() === 'name') {
-        console.log('tetes')
+      if (sort.data === 'name') {
         dispatch(
           updateFilteredList(
             [...cats].sort((a, b) => (a.name > b.name ? 1 : -1))
           )
         )
-      } else if (sort.data.toString() === 'weight') {
+      } else if (sort.data === 'weight') {
         dispatch(
           updateFilteredList(
             [...cats].sort((a, b) =>
@@ -30,7 +29,7 @@ export const SortTab = ({}) => {
             )
           )
         )
-      } else if (sort.data.toString() === 'lifespan') {
+      } else if (sort.data === 'lifespan') {
         dispatch(
           updateFilteredList(
             [...cats].sort((a, b) =>
@@ -41,7 +40,7 @@ export const SortTab = ({}) => {
             )
           )
         )
-      } else if (sort.data.toString() === 'origin') {
+      } else if (sort.data === 'origin') {
         dispatch(
           updateFilteredList(
             [...cats].sort((a, b) => (a.origin > b.origin ? 1 : -1))
@@ -59,9 +58,7 @@ export const SortTab = ({}) => {
         label="Sort by"
         onChange={e => dispatch(updateSort(e.target.value))}
       >
-        <MenuItem defaultChecked={true} value={'name'}>
-          Name
-        </MenuItem>
+        <MenuItem value={'name'}>Name</MenuItem>
         <MenuItem value={'weight'}>Imperial Weight</MenuItem>
         <MenuItem value={'lifespan'}>Lifespan</MenuItem>
         <MenuItem value={'origin'}>Origin</MenuItem>
