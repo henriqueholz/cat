@@ -59,7 +59,9 @@ export const SortTab = ({}) => {
         label="Sort by"
         onChange={e => dispatch(updateSort(e.target.value))}
       >
-        <MenuItem value={'name'}>Name</MenuItem>
+        <MenuItem defaultChecked={true} value={'name'}>
+          Name
+        </MenuItem>
         <MenuItem value={'weight'}>Imperial Weight</MenuItem>
         <MenuItem value={'lifespan'}>Lifespan</MenuItem>
         <MenuItem value={'origin'}>Origin</MenuItem>

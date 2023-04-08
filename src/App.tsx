@@ -1,7 +1,6 @@
 import { Box, ThemeProvider } from '@mui/system'
 import { Header } from './components/Header'
 import { Layout } from './components/Layout'
-import { appTheme } from './config/theme'
 import { Route, Routes } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { BreedList } from './features/cat/CatList'
@@ -10,31 +9,21 @@ import React from 'react'
 
 function App() {
   return (
-    <ThemeProvider theme={appTheme}>
-      <Box
-        component="main"
-        sx={{
-          height: '100vh',
-          backgroundColor: theme => theme.palette.grey[900]
-        }}
-      >
-        <Header />
-        <Layout>
-          <Routes>
-            <Route path="/" element={<BreedList />} />
-            <Route path="/:id" element={<BreedInfo />} />
-            <Route
-              path="*"
-              element={
-                <Box>
-                  <Typography variant="h1">404</Typography>
-                </Box>
-              }
-            />
-          </Routes>
-        </Layout>
-      </Box>
-    </ThemeProvider>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<BreedList />} />
+        <Route path="/:id" element={<BreedInfo />} />
+        <Route
+          path="*"
+          element={
+            <Box sx={{ color: 'white' }}>
+              <Typography variant="h1">404</Typography>
+              <Typography variant="h2">Page not found</Typography>
+            </Box>
+          }
+        />
+      </Routes>
+    </Layout>
   )
 }
 

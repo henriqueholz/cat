@@ -23,7 +23,7 @@ export const BreedList = () => {
   const filteredCatList = useAppSelector(state => selectFilteredList(state)) // Cached filtered cat list data with favorite and user_image
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data !== undefined && filteredCatList.length === 0) {
       dispatch(updateCatList(data))
       dispatch(updateFilteredList(data))
     }
@@ -31,8 +31,8 @@ export const BreedList = () => {
 
   return (
     <>
-      <div>{data !== undefined ? <BasicTabs /> : ''}</div>
-      <ImageList>
+      <BasicTabs />
+      <ImageList variant="woven">
         {filteredCatList.map(item => (
           <Link to={`/${item.id}`} key={item.id}>
             <ImageItem cat={item} favoriteCatPreventDefault={true} />

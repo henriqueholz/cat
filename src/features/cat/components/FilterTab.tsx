@@ -5,7 +5,8 @@ import {
   InputLabel,
   OutlinedInput,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  Box
 } from '@mui/material'
 import { Breed } from '../../../types/Breeds'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
@@ -24,7 +25,11 @@ export const FilterTab = () => {
 
   const ApplyButton = () => {
     return (
-      <Button variant="contained" onClick={() => handleFilter()}>
+      <Button
+        variant="contained"
+        onClick={() => handleFilter()}
+        style={{ marginRight: '.5rem' }}
+      >
         Apply
       </Button>
     )
@@ -114,8 +119,8 @@ export const FilterTab = () => {
   }
 
   return (
-    <>
-      <FormControl>
+    <Box component="form" noValidate autoComplete="off">
+      <FormControl sx={{ marginRight: '.5rem' }}>
         <InputLabel>Name</InputLabel>
         <OutlinedInput
           id="name"
@@ -126,7 +131,7 @@ export const FilterTab = () => {
           }
         />
       </FormControl>
-      <FormControl>
+      <FormControl sx={{ marginRight: '.5rem' }}>
         <InputLabel>Origin</InputLabel>
         <OutlinedInput
           id="origin"
@@ -137,7 +142,7 @@ export const FilterTab = () => {
           }
         />
       </FormControl>
-      <FormControl>
+      <FormControl sx={{ marginRight: '.5rem' }}>
         <InputLabel>Lifespan</InputLabel>
         <OutlinedInput
           id="lifespan"
@@ -151,7 +156,7 @@ export const FilterTab = () => {
           }
         />
       </FormControl>
-      <FormControl>
+      <FormControl sx={{ marginRight: '.5rem' }}>
         <InputLabel>Imperial Weight</InputLabel>
         <OutlinedInput
           id="imperialWeight"
@@ -168,6 +173,6 @@ export const FilterTab = () => {
       <FavoriteCheckbox />
       <ApplyButton />
       <ResetButton />
-    </>
+    </Box>
   )
 }

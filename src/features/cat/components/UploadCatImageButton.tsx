@@ -3,6 +3,7 @@ import React from 'react'
 import { useAppDispatch } from '../../../app/hooks'
 import { updateCat } from '../catSlice'
 import { Button } from '@mui/material'
+import { Upload } from '@mui/icons-material'
 
 type Props = {
   cat: Breed
@@ -30,7 +31,12 @@ export const UploadCatImageButton = ({ cat }: Props) => {
   }
 
   return (
-    <Button variant="contained" component="label">
+    <Button
+      variant="contained"
+      component="label"
+      style={{ margin: '.5rem' }}
+      startIcon={<Upload />}
+    >
       Upload
       <input
         hidden

@@ -1,10 +1,21 @@
 import { createTheme } from '@mui/material'
 
-export const appTheme = createTheme({
+export const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
-    primary: { main: '#f5f5f1' },
-    secondary: { main: '#E50914' },
-    text: { primary: '#f5f5f1' }
-  }
-})
+    background: { default: "#222222" },
+    mode: "dark",
+    primary: { main: "#635985" },
+    secondary: { main: "#443C68" },
+    text: { primary: "#f5f5f1" },
+  },
+});
+
+export const lightTheme = createTheme({
+  palette: {
+    background: {},
+    mode: "light",
+    primary: { main: "#BA90C6" },
+    secondary: { main: "#E8A0BF" },
+    text: { primary: "#18122B" },
+  },
+});
