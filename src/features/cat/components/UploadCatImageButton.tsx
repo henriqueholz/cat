@@ -1,10 +1,7 @@
 import { Breed } from '../../../types/Breeds'
 import React from 'react'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
-import IconButton from '@mui/material/IconButton'
-import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import { useAppDispatch } from '../../../app/hooks'
-import { updateCat, updateFavoriteList } from '../catSlice'
+import { updateCat } from '../catSlice'
 import { Button } from '@mui/material'
 
 type Props = {

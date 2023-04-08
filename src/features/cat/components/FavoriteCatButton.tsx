@@ -25,7 +25,8 @@ export const FavoriteCatButton = ({ cat, preventDefault }: Props) => {
 
   return (
     <ImageListItemBar
-      title={cat.name}
+      title={`${cat.name} | Origin: ${cat.origin}`}
+      subtitle={`${cat.life_span} | Weight: ${cat.weight.imperial}`}
       actionIcon={
         <IconButton
           sx={{ color: 'rgba(255, 255, 255, 0.54)' }}

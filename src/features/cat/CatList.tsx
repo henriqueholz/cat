@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import ImageList from '@mui/material/ImageList'
-import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
-import IconButton from '@mui/material/IconButton'
 import {
   Box,
   Button,
@@ -19,15 +16,9 @@ import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { Breed } from '../../types/Breeds'
 import { useGetBreedsQuery } from './catApiSlice'
-import { Favorite, FavoriteBorder } from '@mui/icons-material'
-import {
-  selectCatList,
-  selectFavorites,
-  updateFavoriteList,
-  uploadCatList
-} from './catSlice'
+import { selectCatList, selectFavorites } from './catSlice'
 import { addFilter } from './filterSlice'
-import { FavoriteCatButton } from './components/FavoriteCatButton'
+import { ImageItem } from './components/ImageItem'
 
 export const BreedList = () => {
   const [filteredBreedList, setFilteredBreedList] = useState<Breed[]>([]) // Filtered and sorted breed list
@@ -75,11 +66,6 @@ export const BreedList = () => {
   useEffect(() => {
     console.log(breedList)
   }, [breedList])
-
-  const title = (item: Breed) => `${item.name} | Origin: ${item.origin}`
-
-  const subtitle = (item: Breed) =>
-    `Lifespan: ${item.life_span} | Weight: ${item.weight.imperial}`
 
   const ApplyButton = () => {
     return (
@@ -291,15 +277,7 @@ export const BreedList = () => {
       <ImageList>
         {breedList.map(item => (
           <Link to={`/${item.id}`} key={item.id}>
-            <ImageListItem>
-              <img
-                src={`https://cdn2.thecatapi.com/images/${item.reference_image_id}.jpg`}
-                srcSet={`https://cdn2.thecatapi.com/images/${item.reference_image_id}.jpg`}
-                alt={item.name}
-                loading="lazy"
-              />
-              <FavoriteCatButton cat={item} preventDefault={true} />
-            </ImageListItem>
+            <ImageItem cat={item} favoriteCatPreventDefault={true} />
           </Link>
         ))}
       </ImageList>
