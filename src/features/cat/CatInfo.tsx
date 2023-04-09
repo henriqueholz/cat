@@ -7,9 +7,11 @@ import { UploadCatImageButton } from './components/UploadCatImageButton'
 import { RemoveCatImageButton } from './components/RemoveCatImageButton'
 import { ImageItem } from './components/ImageItem'
 import { TextRating } from './components/TextRating'
-import { Breed } from '../../types/Breeds'
 import { Typography } from '@mui/material'
-import { Box } from '@mui/system'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Grid from '@mui/material/Grid'
+import { styled } from '@mui/material/styles'
 
 const information: string[] = [
   'indoor',
@@ -53,6 +55,12 @@ export const BreedInfo = () => {
     }
   }, [data])
 
+  const Item = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+  }))
+
   return (
     <>
       {cat !== undefined ? (
@@ -60,9 +68,9 @@ export const BreedInfo = () => {
           <ImageItem cat={cat} />
           <UploadCatImageButton cat={cat} />
           <RemoveCatImageButton cat={cat} />
-          <Box
+          <Item
             sx={{
-              padding: 1,
+              marginBottom: 1,
               '&:hover': {
                 backgroundColor: 'primary.main',
                 opacity: [0.9, 0.8, 0.7]
@@ -70,21 +78,22 @@ export const BreedInfo = () => {
             }}
           >
             <Typography>{cat?.description}</Typography>
-          </Box>
-          <Box
-            sx={{
-              mt: 2,
-              pl: 1,
-              columnCount: 2,
-              '&:hover': {
-                backgroundColor: 'primary.main',
-                opacity: [0.9, 0.8, 0.7]
-              }
-            }}
-          >
-            {information.map(x => (
-              <TextRating label={x} value={cat[x]} />
-            ))}
+          </Item>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid>
+              <Item
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    opacity: [0.9, 0.8, 0.7]
+                  }
+                }}
+              >
+                {information.map(x => (
+                  <TextRating label={x} value={cat[x]} key={x} />
+                ))}
+              </Item>
+            </Grid>
           </Box>
         </>
       ) : (

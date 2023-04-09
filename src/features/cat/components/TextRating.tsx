@@ -5,14 +5,14 @@ import StarIcon from '@mui/icons-material/Star'
 import { Typography } from '@mui/material'
 
 const labels: { [index: string]: string } = {
-  0.5: 'Useless',
-  1: 'Useless+',
-  1.5: 'Poor',
-  2: 'Poor+',
-  2.5: 'Ok',
-  3: 'Ok+',
-  3.5: 'Good',
-  4: 'Good+',
+  0.5: 'Poor',
+  1: 'Poor+',
+  1.5: 'Fair',
+  2: 'Fair+',
+  2.5: 'Good',
+  3: 'Good+',
+  3.5: 'Very Good',
+  4: 'Very Good+',
   4.5: 'Excellent',
   5: 'Excellent+'
 }
@@ -42,7 +42,6 @@ export const TextRating = (props: Props) => {
   return (
     <Box
       sx={{
-        width: 200,
         display: 'flex',
         alignItems: 'center'
       }}
@@ -51,7 +50,7 @@ export const TextRating = (props: Props) => {
         sx={{ ml: 1, mt: 1, mr: 1, fontWeight: 'bold' }}
       >{`${convertSnakeCase(label)}: `}</Typography>
       <Rating
-        value={2}
+        value={value}
         readOnly
         precision={0.5}
         emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}

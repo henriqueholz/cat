@@ -1,6 +1,6 @@
 import { AppBar, Box, CssBaseline } from '@mui/material'
 import { Container, ThemeProvider } from '@mui/system'
-import React, { useState } from 'react'
+import React from 'react'
 import { useAppTheme } from '../hooks/useAppTheme'
 import { Header } from './Header'
 
