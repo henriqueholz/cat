@@ -7,7 +7,7 @@ import { ImageItem } from './components/ImageItem'
 import BasicTabs from './components/BasicTabs'
 import { selectSort } from './sortSlice'
 
-export const BreedList = () => {
+export const CatList = () => {
   const filteredCatList = useAppSelector(state => selectFilteredList(state)) // Cached filtered cat list data with favorite
   const sort = useAppSelector(state => selectSort(state)) // Cached cat list data with favorite and user_image
   const cats = useAppSelector(state => selectFilteredList(state)) // Cached filtered cat list data with favorite and user_image
@@ -15,6 +15,7 @@ export const BreedList = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    console.log(sort)
     if (cats !== undefined) {
       if (sort.data === 'name') {
         dispatch(
@@ -57,7 +58,7 @@ export const BreedList = () => {
   return (
     <>
       <BasicTabs />
-      <ImageList variant="woven">
+      <ImageList variant="woven" data-testid="image-list">
         {filteredCatList.map(item => (
           <Link to={`/${item.id}`} key={item.id}>
             <ImageItem cat={item} favoriteCatPreventDefault={true} />

@@ -2,10 +2,10 @@ import { Box } from '@mui/system'
 import { Layout } from './components/Layout'
 import { Route, Routes } from 'react-router-dom'
 import { Typography } from '@mui/material'
-import { BreedList } from './features/cat/CatList'
-import { BreedInfo } from './features/cat/CatInfo'
+import { CatList } from './features/cat/CatList'
+import { CatInfo } from './features/cat/CatInfo'
 import React, { useState, useEffect } from 'react'
-import { useGetBreedsQuery } from './features/cat/catApiSlice'
+import { useGetCatsQuery } from './features/cat/catApiSlice'
 import {
   selectFavorites,
   updateCatList,
@@ -22,7 +22,7 @@ function App() {
   const dispatch = useAppDispatch()
 
   // Fetch data from the cat API
-  const { data, isFetching, error } = useGetBreedsQuery(options, {
+  const { data, isFetching, error } = useGetCatsQuery(options, {
     // Retrieve the cat breeds from the cat Api once every 30 minutes
     pollingInterval: 1000 * 60 * 30 // 1000ms * 60 * 30 = 1800000ms = 30 minutes
   })
@@ -56,8 +56,8 @@ function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<BreedList />} />
-        <Route path="/:id" element={<BreedInfo />} />
+        <Route path="/" element={<CatList />} />
+        <Route path="/:id" element={<CatInfo />} />
         <Route
           path="*"
           element={

@@ -3,11 +3,11 @@ import { RootState } from "../../app/store"
 
 const { createSlice } = require('@reduxjs/toolkit')
 
-interface SortType {
+export interface SortType {
   data: string,
 }
 
-const initialState: SortType = { 
+export const initialState: SortType = { 
   data: "name",
 };
 
@@ -24,6 +24,7 @@ const sortSlice = createSlice({
 // Selectors
 export const selectSort = (state: RootState) => {
   const sort = state.sortSlice as SortType
+  console.log(sort)
   return sort
 }
 

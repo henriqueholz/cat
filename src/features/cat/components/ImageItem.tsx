@@ -13,7 +13,7 @@ export const ImageItem = ({
   favoriteCatPreventDefault = false
 }: Props) => {
   return (
-    <ImageListItem key={cat.id}>
+    <ImageListItem key={cat.id} data-testid={`cat-card-${cat.id}`}>
       <img
         src={
           localStorage.getItem(`cat:${cat.id}`) !== null &&

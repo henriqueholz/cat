@@ -11,11 +11,11 @@ export interface FilterAttributes {
   isFavorite: boolean,
 }
 
-interface FilterType {
+export interface FilterType {
   data: FilterAttributes,
 }
 
-const initialState: FilterType = { 
+export const initialState: FilterType = { 
   data : {
     name: "",
     origin: "",

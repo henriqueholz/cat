@@ -4,7 +4,7 @@ export const baseUrl = "https://api.thecatapi.com/v1";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  tagTypes: ["Breeds"],
+  tagTypes: ["Cats"],
   endpoints: (builder) => ({}),
   baseQuery: fetchBaseQuery({ baseUrl }),
 });

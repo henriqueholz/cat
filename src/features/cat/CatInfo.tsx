@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useGetBreedsQuery } from './catApiSlice'
+import { useGetCatsQuery } from './catApiSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectCat, updateCatList } from './catSlice'
 import { UploadCatImageButton } from './components/UploadCatImageButton'
@@ -38,13 +38,13 @@ const information: string[] = [
   'hypoallergenic'
 ]
 
-export const BreedInfo = () => {
+export const CatInfo = () => {
   const id = useParams().id as string
   const [options, setOptions] = useState({
     page: 1,
     limit: 10
   })
-  const { data, isFetching, error } = useGetBreedsQuery(options) // Fetch data from the cat API
+  const { data, isFetching, error } = useGetCatsQuery(options) // Fetch data from the cat API
   const dispatch = useAppDispatch()
 
   const cat = useAppSelector(state => selectCat(state, id))

@@ -21,13 +21,13 @@ function parseQueryParams(params: BreedParams) {
   return query.toString();
 }
 
-function getBreeds({ limit = 10, page = 0 }) {
+function getCats({ limit = 10, page = 0 }) {
   const params = { limit, page };
 
   return `${breedsEndpointUrl}?${parseQueryParams(params)}`;
 }
 
-function getBreed({ id }: { id: string }) {
+function getCat({ id }: { id: string }) {
   return `${breedsEndpointUrl}/${id}`;
 }
 
@@ -36,7 +36,7 @@ interface CreateFavoritePayload {
   sub_id: string
 }
 
-function createFavouriteMutation(body: CreateFavoritePayload) {
+function createFavoriteMutation(body: CreateFavoritePayload) {
   return { 
     url: `${favoritesEndpointUrl}?api_key=${apiKey}`, 
     method: "POST", 
@@ -44,7 +44,7 @@ function createFavouriteMutation(body: CreateFavoritePayload) {
   }
 }
 
-function deleteFavouriteMutation(breed: Breed) {
+function deleteFavoriteMutation(breed: Breed) {
   return {
     url: `${favoritesEndpointUrl}/${breed.id}&api_key=${apiKey}`,
     method: "DELETE",
@@ -62,33 +62,28 @@ interface DeleteFavoriteResponse {
 
 export const breedsApiSlice = apiSlice.injectEndpoints({
   endpoints: ({ query, mutation }) => ({
-    getBreeds: query<Breed[], BreedParams>({
-      query: getBreeds,
-      providesTags: ["Breeds"],
+    getCats: query<Breed[], BreedParams>({
+      query: getCats,
+      providesTags: ["Cats"],
     }),
-    getBreed: query<Breed, { id: string }>({
-      query: getBreed,
-      providesTags: ["Breeds"],
+    getCat: query<Breed, { id: string }>({
+      query: getCat,
+      providesTags: ["Cats"],
     }),
     createFavorite: mutation<CreateFavoriteResponse, CreateFavoritePayload>({
-      query: createFavouriteMutation,
-      invalidatesTags: ["Breeds"],
+      query: createFavoriteMutation,
+      invalidatesTags: ["Cats"],
     }),
     getFavorites: query<Breed[], BreedParams>({
-      query: getBreeds,
-      providesTags: ["Breeds"],
-    }),
-    deleteCategory: mutation<DeleteFavoriteResponse, { id: string }>({
-      query: deleteFavouriteMutation,
-      invalidatesTags: ["Breeds"],
+      query: getCats,
+      providesTags: ["Cats"],
     }),
   }),
 });
 
 export const {
-  useGetBreedsQuery,  
-  useGetBreedQuery,
+  useGetCatsQuery,  
+  useGetCatQuery,
   useCreateFavoriteMutation,
   useGetFavoritesQuery,
-  useDeleteCategoryMutation
 } = breedsApiSlice;
