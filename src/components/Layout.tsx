@@ -11,7 +11,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     <ThemeProvider theme={currentTheme}>
       <CssBaseline />
       <Box sx={{ display: 'flex' }}>
-        <AppBar position="fixed">
+        <AppBar position="fixed" data-testid="header">
           <Header
             toggle={toggleCurrentTheme}
             theme={currentTheme.palette.mode === 'dark' ? 'dark' : 'light'}

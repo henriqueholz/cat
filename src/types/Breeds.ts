@@ -46,6 +46,6 @@ export interface Weight {
 }
 
 export interface BreedParams {
-  limit: number;
-  page:  number;
+  limit?: number;
+  page?:  number;
 }

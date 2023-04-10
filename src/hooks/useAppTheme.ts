@@ -4,7 +4,7 @@ import { useLocalStorage } from "./useLocalStorage";
 
 export function useAppTheme() {
   const [theme, setTheme] = useState(darkTheme);
-  const [soredThemeMode, setStoredThemeMode] = useLocalStorage<
+  const [storedThemeMode, setStoredThemeMode] = useLocalStorage<
     "dark" | "light"
   >("themeMode", "dark");
 
@@ -15,11 +15,11 @@ export function useAppTheme() {
   };
 
   useEffect(() => {
-    const currentTheme = soredThemeMode === "dark" ? darkTheme : lightTheme;
+    const currentTheme = storedThemeMode === "dark" ? darkTheme : lightTheme;
     if (currentTheme) {
       setTheme(currentTheme);
     }
-  }, [soredThemeMode]);
+  }, [storedThemeMode]);
 
   return [theme, toggleTheme] as const;
 }

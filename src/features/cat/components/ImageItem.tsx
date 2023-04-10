@@ -1,7 +1,6 @@
 import { ImageListItem } from '@mui/material'
 import { Breed } from '../../../types/Breeds'
 import { FavoriteCatButton } from './FavoriteCatButton'
-import { Error } from '@mui/icons-material'
 import React from 'react'
 
 type Props = {
@@ -24,6 +23,10 @@ export const ImageItem = ({
         }
         alt={cat.name}
         loading="lazy"
+        onError={({ currentTarget }) => {
+          currentTarget.onerror = null // prevents looping
+          currentTarget.src = require('../../../images/cat.png')
+        }}
       />
       <FavoriteCatButton cat={cat} preventDefault={favoriteCatPreventDefault} />
     </ImageListItem>

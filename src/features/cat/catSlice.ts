@@ -18,6 +18,7 @@ const catListSlice = createSlice({
   reducers: {
     updateCatList(state, action: PayloadAction<Breed[]>) {
       state.fullList = action.payload
+      state.filteredList = action.payload
     },
     updateCat(state, action: PayloadAction<Breed>) {
       const fullList = state.fullList as Breed[]

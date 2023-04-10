@@ -9,7 +9,7 @@ export const SortTab = () => {
   const dispatch = useAppDispatch()
 
   return (
-    <FormControl sx={{ minWidth: 160 }}>
+    <FormControl sx={{ minWidth: 160, marginBottom: '0.5rem' }}>
       <InputLabel>Sort by</InputLabel>
       <Select
         value={sort.data}

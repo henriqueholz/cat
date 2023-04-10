@@ -32,7 +32,7 @@ export const FavoriteCatButton = ({ cat, preventDefault }: Props) => {
           sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
           aria-label={`info about ${cat.name}`}
           onClick={e => handleFavoriteBreed(e)}
-          data-testid="favorite-button"
+          data-testid={`favorite-button-${cat.id}`}
         >
           {cat.favorite ? <Favorite /> : <FavoriteBorder />}
         </IconButton>

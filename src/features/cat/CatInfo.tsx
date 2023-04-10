@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useGetCatsQuery } from './catApiSlice'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectCat, updateCatList } from './catSlice'
+import { useAppSelector } from '../../app/hooks'
+import { selectCat } from './catSlice'
 import { UploadCatImageButton } from './components/UploadCatImageButton'
 import { RemoveCatImageButton } from './components/RemoveCatImageButton'
 import { ImageItem } from './components/ImageItem'
@@ -44,8 +43,6 @@ export const CatInfo = () => {
   const cat = useAppSelector(state => selectCat(state, id))
 
   const Item = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(1),
-    textAlign: 'center',
     color: theme.palette.text.secondary
   }))
 
@@ -61,7 +58,8 @@ export const CatInfo = () => {
               marginBottom: 1,
               '&:hover': {
                 backgroundColor: 'primary.main',
-                opacity: [0.9, 0.8, 0.7]
+                opacity: [0.9, 0.8, 0.7],
+                textAlign: 'center'
               }
             }}
           >

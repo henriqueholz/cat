@@ -51,6 +51,7 @@ export const FilterTab = () => {
   const FavoriteCheckbox = () => {
     return (
       <FormControlLabel
+        sx={{ mt: '0.5rem' }}
         control={
           <Checkbox
             checked={filter.isFavorite}
@@ -58,7 +59,7 @@ export const FilterTab = () => {
             name="favorites"
           />
         }
-        label="Favorites"
+        label="Only Favorites"
       />
     )
   }
@@ -130,7 +131,9 @@ export const FilterTab = () => {
 
   return (
     <Box component="form" noValidate autoComplete="off">
-      <FormControl sx={{ marginRight: '.5rem' }}>
+      <FormControl
+        sx={{ marginRight: '1rem', width: 150, marginBottom: '0.5rem' }}
+      >
         <InputLabel>Name</InputLabel>
         <OutlinedInput
           id="name"
@@ -142,7 +145,7 @@ export const FilterTab = () => {
           }
         />
       </FormControl>
-      <FormControl sx={{ marginRight: '.5rem' }}>
+      <FormControl sx={{ mr: '1rem', width: 150, marginBottom: '0.5rem' }}>
         <InputLabel>Origin</InputLabel>
         <OutlinedInput
           id="origin"
@@ -153,7 +156,9 @@ export const FilterTab = () => {
           }
         />
       </FormControl>
-      <FormControl sx={{ marginRight: '.5rem' }}>
+      <FormControl
+        sx={{ marginRight: '1rem', width: 150, marginBottom: '0.5rem' }}
+      >
         <InputLabel>Lifespan</InputLabel>
         <OutlinedInput
           id="lifespan"
@@ -167,7 +172,9 @@ export const FilterTab = () => {
           }
         />
       </FormControl>
-      <FormControl sx={{ marginRight: '.5rem' }}>
+      <FormControl
+        sx={{ marginRight: '1rem', width: 150, marginBottom: '0.5rem' }}
+      >
         <InputLabel>Imperial Weight</InputLabel>
         <OutlinedInput
           id="imperialWeight"
@@ -182,8 +189,10 @@ export const FilterTab = () => {
         />
       </FormControl>
       <FavoriteCheckbox />
-      <ApplyButton />
-      <ResetButton />
+      <Box sx={{ float: 'right', m: '0.5rem' }}>
+        <ApplyButton />
+        <ResetButton />
+      </Box>
     </Box>
   )
 }
