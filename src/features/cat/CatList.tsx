@@ -15,7 +15,6 @@ export const CatList = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    console.log(sort)
     if (cats !== undefined) {
       if (sort.data === 'name') {
         dispatch(

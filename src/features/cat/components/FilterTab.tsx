@@ -29,6 +29,7 @@ export const FilterTab = () => {
         variant="contained"
         onClick={() => handleFilter()}
         style={{ marginRight: '.5rem' }}
+        data-testid="filter-button"
       >
         Apply
       </Button>
@@ -37,7 +38,11 @@ export const FilterTab = () => {
 
   const ResetButton = () => {
     return (
-      <Button variant="text" onClick={() => handleReset()}>
+      <Button
+        variant="text"
+        data-testid="reset-button"
+        onClick={() => handleReset()}
+      >
         Reset
       </Button>
     )
@@ -53,7 +58,7 @@ export const FilterTab = () => {
             name="favorites"
           />
         }
-        label="favorites"
+        label="Favorites"
       />
     )
   }
@@ -66,7 +71,7 @@ export const FilterTab = () => {
     const filterData = {
       name: filter.name,
       origin: filter.origin,
-      weight: filter.lifespan,
+      weight: filter.weight,
       lifespan: filter.lifespan,
       isFavorite: filter.isFavorite
     }
@@ -77,7 +82,13 @@ export const FilterTab = () => {
   const handleReset = () => {
     dispatch(updateFilteredList(fullCatList))
     dispatch(
-      updateFilter({ name: '', lifespan: '', origin: '', isFavorite: false })
+      updateFilter({
+        name: '',
+        lifespan: '',
+        weight: '',
+        origin: '',
+        isFavorite: false
+      })
     )
   }
 
@@ -100,11 +111,10 @@ export const FilterTab = () => {
     },
     {
       filterFunction: (breed: Breed) =>
-        Number(filter.lifespan) >=
+        Number(filter.weight) >=
           parseInt(breed.weight.imperial.split('-')[0]) &&
-        Number(filter.lifespan) <=
-          parseInt(breed.weight.imperial.split('-')[1]),
-      active: !!filter.lifespan
+        Number(filter.weight) <= parseInt(breed.weight.imperial.split('-')[1]),
+      active: !!filter.weight
     },
     {
       filterFunction: (breed: Breed) => breed.favorite === filter.isFavorite,
@@ -126,6 +136,7 @@ export const FilterTab = () => {
           id="name"
           label="Name"
           value={filter.name}
+          data-testid="name-field"
           onChange={e =>
             dispatch(updateFilter({ ...filter, name: e.target.value }))
           }

@@ -24,7 +24,6 @@ const sortSlice = createSlice({
 // Selectors
 export const selectSort = (state: RootState) => {
   const sort = state.sortSlice as SortType
-  console.log(sort)
   return sort
 }
 

@@ -40,20 +40,8 @@ const information: string[] = [
 
 export const CatInfo = () => {
   const id = useParams().id as string
-  const [options, setOptions] = useState({
-    page: 1,
-    limit: 10
-  })
-  const { data, isFetching, error } = useGetCatsQuery(options) // Fetch data from the cat API
-  const dispatch = useAppDispatch()
 
   const cat = useAppSelector(state => selectCat(state, id))
-
-  useEffect(() => {
-    if (cat === undefined && data !== undefined) {
-      dispatch(updateCatList(data))
-    }
-  }, [data])
 
   const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),

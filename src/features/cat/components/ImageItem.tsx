@@ -1,6 +1,7 @@
 import { ImageListItem } from '@mui/material'
 import { Breed } from '../../../types/Breeds'
 import { FavoriteCatButton } from './FavoriteCatButton'
+import { Error } from '@mui/icons-material'
 import React from 'react'
 
 type Props = {
@@ -16,12 +17,6 @@ export const ImageItem = ({
     <ImageListItem key={cat.id} data-testid={`cat-card-${cat.id}`}>
       <img
         src={
-          localStorage.getItem(`cat:${cat.id}`) !== null &&
-          localStorage.getItem(`cat:${cat.id}`) !== undefined
-            ? localStorage.getItem(`cat:${cat.id}`)!
-            : `https://cdn2.thecatapi.com/images/${cat.reference_image_id}.jpg`
-        }
-        srcSet={
           localStorage.getItem(`cat:${cat.id}`) !== null &&
           localStorage.getItem(`cat:${cat.id}`) !== undefined
             ? localStorage.getItem(`cat:${cat.id}`)!

@@ -36,6 +36,7 @@ export const UploadCatImageButton = ({ cat }: Props) => {
       component="label"
       style={{ margin: '.5rem' }}
       startIcon={<Upload />}
+      data-testid="upload-image-button"
     >
       Upload
       <input
@@ -43,6 +44,7 @@ export const UploadCatImageButton = ({ cat }: Props) => {
         accept="image/*"
         multiple
         type="file"
+        data-testid="remove-image-button"
         onChange={e => uploadImage(e)}
       />
     </Button>

@@ -14,6 +14,7 @@ export const SortTab = () => {
       <Select
         value={sort.data}
         label="Sort by"
+        data-testid="sort-select"
         onChange={e => dispatch(updateSort(e.target.value))}
       >
         <MenuItem value={'name'}>Name</MenuItem>
