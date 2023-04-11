@@ -1,10 +1,10 @@
 import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { selectSort, updateSort } from '../sortSlice'
+import { selectSort, updateSort } from '../catSlice'
 
 export const SortTab = () => {
-  const sort = useAppSelector(state => selectSort(state)) // Cached cat list data with favorite and user_image
+  const sort = useAppSelector(state => selectSort(state)) // Cached sort param
 
   const dispatch = useAppDispatch()
 
@@ -15,7 +15,7 @@ export const SortTab = () => {
         value={sort.data}
         label="Sort by"
         data-testid="sort-select"
-        onChange={e => dispatch(updateSort(e.target.value))}
+        onChange={e => dispatch(updateSort({ data: e.target.value }))}
       >
         <MenuItem value={'name'}>Name</MenuItem>
         <MenuItem value={'weight'}>Imperial Weight</MenuItem>

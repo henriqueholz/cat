@@ -46,10 +46,10 @@ export default function BasicTabs() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs">
           <Tab label="Sort" {...a11yProps(0)} />
-          <Tab label="Filters" {...a11yProps(1)} />
+          <Tab label="Filters" {...a11yProps(1)} data-testid="filter-tab" />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0} data-testid="sort-tab">
         <SortTab />
       </TabPanel>
       <TabPanel value={value} index={1}>

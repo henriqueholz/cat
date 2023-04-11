@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -6,17 +7,10 @@ import { ArrowBack } from '@mui/icons-material'
 import { Link, useLocation } from 'react-router-dom'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
-import React, { useEffect } from 'react'
-import {
-  selectFavorites,
-  selectFilteredList,
-  updateCatList,
-  updateFilteredList
-} from '../features/cat/catSlice'
+import { selectFavorites, updateCatList } from '../features/cat/catSlice'
 import { Breed } from '../types/Breeds'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { useGetCatsQuery } from '../features/cat/catApiSlice'
-import { selectSort } from '../features/cat/sortSlice'
 
 export const Header = ({
   toggle,
@@ -63,50 +57,6 @@ export const Header = ({
       dispatch(updateCatList(newCatListWithFavorites))
     }
   }, [data])
-
-  const sort = useAppSelector(state => selectSort(state)) // Cached cat list data with favorite and user_image
-  const cats = useAppSelector(state => selectFilteredList(state)) // Cached filtered cat list data with favorite and user_image
-
-  // Used for sorting the cat list
-  useEffect(() => {
-    if (cats !== undefined && cats.length > 0) {
-      if (sort.data === 'name') {
-        dispatch(
-          updateFilteredList(
-            [...cats].sort((a, b) => (a.name > b.name ? 1 : -1))
-          )
-        )
-      } else if (sort.data === 'weight') {
-        dispatch(
-          updateFilteredList(
-            [...cats].sort((a, b) =>
-              parseInt(a.weight.imperial.split('-')[0]) >
-              parseInt(b.weight.imperial.split('-')[0])
-                ? 1
-                : -1
-            )
-          )
-        )
-      } else if (sort.data === 'lifespan') {
-        dispatch(
-          updateFilteredList(
-            [...cats].sort((a, b) =>
-              parseInt(a.life_span.split('-')[0]) >
-              parseInt(b.life_span.split('-')[0])
-                ? 1
-                : -1
-            )
-          )
-        )
-      } else if (sort.data === 'origin') {
-        dispatch(
-          updateFilteredList(
-            [...cats].sort((a, b) => (a.origin > b.origin ? 1 : -1))
-          )
-        )
-      }
-    }
-  }, [sort])
 
   const isCatDetailsPage = () => location.pathname.split('/')[1] !== ''
 

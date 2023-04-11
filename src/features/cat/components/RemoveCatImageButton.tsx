@@ -23,6 +23,7 @@ export const RemoveCatImageButton = ({ cat }: Props) => {
       variant="outlined"
       startIcon={<Delete />}
       onClick={() => removeImage()}
+      data-testid="remove-image-button"
     >
       Delete
     </Button>

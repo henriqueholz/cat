@@ -44,7 +44,6 @@ export const UploadCatImageButton = ({ cat }: Props) => {
         accept="image/*"
         multiple
         type="file"
-        data-testid="remove-image-button"
         onChange={e => uploadImage(e)}
       />
     </Button>

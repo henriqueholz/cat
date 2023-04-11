@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 
-const information: string[] = [
+const catInfoKeys: string[] = [
   'indoor',
   'lap',
   'adaptability',
@@ -75,8 +75,13 @@ export const CatInfo = () => {
                   }
                 }}
               >
-                {information.map(x => (
-                  <TextRating label={x} value={cat[x]} key={x} />
+                {catInfoKeys.map(x => (
+                  <TextRating
+                    label={x}
+                    value={cat[x]}
+                    key={x}
+                    data-testid="test-rating"
+                  />
                 ))}
               </Item>
             </Grid>

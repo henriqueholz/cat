@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   FormControl,
@@ -6,22 +6,18 @@ import {
   OutlinedInput,
   Checkbox,
   FormControlLabel,
-  Box
+  Box,
+  useMediaQuery,
+  useTheme
 } from '@mui/material'
-import { Breed } from '../../../types/Breeds'
-import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { updateFilter, selectFilter, FilterAttributes } from '../filterSlice'
-import { selectCatList, updateFilteredList } from '../catSlice'
-
-interface FilterObject {
-  filterFunction: (breed: Breed) => boolean
-  active: boolean
-}
+import { useAppDispatch } from '../../../app/hooks'
+import { initialFilterParams, updateFilter } from '../catSlice'
 
 export const FilterTab = () => {
+  const [filterParams, setFilterParams] = useState(initialFilterParams)
   const dispatch = useAppDispatch()
-  const filter: FilterAttributes = useAppSelector(state => selectFilter(state))
-  const fullCatList = useAppSelector(state => selectCatList(state)) // Cached full cat list data with favorite and user_image
+  const theme = useTheme()
+  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
 
   const ApplyButton = () => {
     return (
@@ -54,8 +50,13 @@ export const FilterTab = () => {
         sx={{ mt: '0.5rem' }}
         control={
           <Checkbox
-            checked={filter.isFavorite}
-            onChange={handleFavoriteCheckbox}
+            checked={filterParams.isFavorite}
+            onChange={e =>
+              setFilterParams({
+                ...filterParams,
+                isFavorite: !filterParams.isFavorite
+              })
+            }
             name="favorites"
           />
         }
@@ -64,135 +65,102 @@ export const FilterTab = () => {
     )
   }
 
-  const handleFavoriteCheckbox = () => {
-    dispatch(updateFilter({ ...filter, isFavorite: !filter.isFavorite }))
-  }
-
   const handleFilter = () => {
-    const filterData = {
-      name: filter.name,
-      origin: filter.origin,
-      weight: filter.weight,
-      lifespan: filter.lifespan,
-      isFavorite: filter.isFavorite
-    }
-    dispatch(updateFilter(filterData))
-    dispatch(updateFilteredList(filterBreeds()))
+    dispatch(updateFilter(filterParams))
   }
 
   const handleReset = () => {
-    dispatch(updateFilteredList(fullCatList))
-    dispatch(
-      updateFilter({
-        name: '',
-        lifespan: '',
-        weight: '',
-        origin: '',
-        isFavorite: false
-      })
-    )
-  }
-
-  const filters: FilterObject[] = [
-    {
-      filterFunction: (breed: Breed) =>
-        breed.name.toLowerCase().includes(filter.name.toLowerCase()),
-      active: !!filter.name
-    },
-    {
-      filterFunction: (breed: Breed) =>
-        breed.origin.toLowerCase().includes(filter.origin.toLowerCase()),
-      active: !!filter.origin
-    },
-    {
-      filterFunction: (breed: Breed) =>
-        Number(filter.lifespan) >= parseInt(breed.life_span.split('-')[0]) &&
-        Number(filter.lifespan) <= parseInt(breed.life_span.split('-')[1]),
-      active: !!filter.lifespan
-    },
-    {
-      filterFunction: (breed: Breed) =>
-        Number(filter.weight) >=
-          parseInt(breed.weight.imperial.split('-')[0]) &&
-        Number(filter.weight) <= parseInt(breed.weight.imperial.split('-')[1]),
-      active: !!filter.weight
-    },
-    {
-      filterFunction: (breed: Breed) => breed.favorite === filter.isFavorite,
-      active: !!filter.isFavorite
-    }
-  ]
-
-  const filterBreeds = (): Breed[] => {
-    return fullCatList.filter(func =>
-      filters.every(filter => !filter.active || filter.filterFunction(func))
-    )
+    setFilterParams(initialFilterParams)
+    dispatch(updateFilter(initialFilterParams))
   }
 
   return (
-    <Box component="form" noValidate autoComplete="off">
+    <Box
+      component="form"
+      noValidate
+      autoComplete="off"
+      sx={{ display: isDesktop ? '' : 'grid' }}
+    >
       <FormControl
-        sx={{ marginRight: '1rem', width: 150, marginBottom: '0.5rem' }}
+        sx={{
+          marginRight: '1rem',
+          marginBottom: '0.5rem',
+          maxWidth: isDesktop ? 130 : 'auto'
+        }}
       >
         <InputLabel>Name</InputLabel>
         <OutlinedInput
           id="name"
           label="Name"
-          value={filter.name}
+          value={filterParams.name}
           data-testid="name-field"
           onChange={e =>
-            dispatch(updateFilter({ ...filter, name: e.target.value }))
-          }
-        />
-      </FormControl>
-      <FormControl sx={{ mr: '1rem', width: 150, marginBottom: '0.5rem' }}>
-        <InputLabel>Origin</InputLabel>
-        <OutlinedInput
-          id="origin"
-          label="Origin"
-          value={filter.origin}
-          onChange={e =>
-            dispatch(updateFilter({ ...filter, origin: e.target.value }))
+            setFilterParams({ ...filterParams, name: e.target.value })
           }
         />
       </FormControl>
       <FormControl
-        sx={{ marginRight: '1rem', width: 150, marginBottom: '0.5rem' }}
+        sx={{
+          mr: '1rem',
+          maxWidth: isDesktop ? 130 : 'auto',
+          marginBottom: '0.5rem'
+        }}
+      >
+        <InputLabel>Origin</InputLabel>
+        <OutlinedInput
+          id="origin"
+          label="Origin"
+          value={filterParams.origin}
+          onChange={e =>
+            setFilterParams({ ...filterParams, origin: e.target.value })
+          }
+        />
+      </FormControl>
+      <FormControl
+        sx={{
+          marginRight: '1rem',
+          maxWidth: isDesktop ? 130 : 'auto',
+          marginBottom: '0.5rem'
+        }}
       >
         <InputLabel>Lifespan</InputLabel>
         <OutlinedInput
           id="lifespan"
           label="Lifespan"
-          value={filter.lifespan}
+          value={filterParams.lifespan}
           type="number"
           onChange={e =>
-            dispatch(
-              updateFilter({ ...filter, lifespan: parseInt(e.target.value) })
-            )
+            setFilterParams({
+              ...filterParams,
+              lifespan: parseInt(e.target.value)
+            })
           }
         />
       </FormControl>
       <FormControl
-        sx={{ marginRight: '1rem', width: 150, marginBottom: '0.5rem' }}
+        sx={{
+          marginRight: '1rem',
+          maxWidth: isDesktop ? 130 : 'auto',
+          marginBottom: '0.5rem'
+        }}
       >
         <InputLabel>Imperial Weight</InputLabel>
         <OutlinedInput
           id="imperialWeight"
           label="Imperial Weight"
-          value={filter.weight}
+          value={filterParams.weight}
           type="number"
           onChange={e =>
-            dispatch(
-              updateFilter({ ...filter, weight: parseInt(e.target.value) })
-            )
+            setFilterParams({
+              ...filterParams,
+              weight: parseInt(e.target.value)
+            })
           }
         />
       </FormControl>
       <FavoriteCheckbox />
-      <Box sx={{ float: 'right', m: '0.5rem' }}>
-        <ApplyButton />
-        <ResetButton />
-      </Box>
+      <ApplyButton />
+      <ResetButton />
     </Box>
   )
 }
