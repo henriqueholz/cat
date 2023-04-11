@@ -1,7 +1,7 @@
 import { fireEvent, renderWithProviders, screen } from '../utils/test-utils'
 import { Header } from './Header'
 
-describe('Filter tab', () => {
+describe('Header', () => {
   it('should render correctly using dark theme', () => {
     const { asFragment } = renderWithProviders(
       <Header

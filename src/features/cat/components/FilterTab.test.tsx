@@ -5,7 +5,7 @@ import {
   screen
 } from '../../../utils/test-utils'
 import { filter } from '../../mocks/filter'
-import { updateFilter } from '../filterSlice'
+import { updateFilter } from '../catSlice'
 import { FilterTab } from './FilterTab'
 
 describe('Filter tab', () => {
@@ -37,6 +37,7 @@ describe('Filter tab', () => {
 
     const resetButton = screen.getByTestId('reset-button')
     expect(resetButton).toBeInTheDocument()
+
     // After reseting the input is cleared
     fireEvent.click(resetButton)
     expect(nameField?.getAttribute('value')).toBe('')
