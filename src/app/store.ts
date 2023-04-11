@@ -7,14 +7,10 @@ import {
 } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
 import { catListReducer } from "../features/cat/catSlice";
-import { filterReducer } from "../features/cat/filterSlice";
-import { sortReducer } from "../features/cat/sortSlice";
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
-  catListSlice: catListReducer,
-  filterSlice: filterReducer,
-  sortSlice: sortReducer
+  catSlice: catListReducer,
 })
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

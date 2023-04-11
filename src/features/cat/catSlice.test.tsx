@@ -1,5 +1,11 @@
 import { RootState } from '../../app/store'
 import {
+  catListWithSortLifeSpan,
+  catListWithSortName,
+  catListWithSortOrigin,
+  catListWithSortWeight
+} from '../mocks/catSortingLists'
+import {
   catList,
   favoriteList,
   catListWithFavorite,
@@ -7,7 +13,8 @@ import {
   catWithNewImage,
   catListWithNewImage,
   cat,
-  catListWithFavoriteFalse
+  catListWithFavoriteFalse,
+  filteredSingleCatList
 } from '../mocks/cats'
 import reducer, {
   updateCatList,
@@ -18,7 +25,11 @@ import reducer, {
   selectCat,
   selectCatList,
   selectFavorites,
-  selectFilteredList
+  selectFilteredList,
+  initialFilterParams,
+  updateSort,
+  selectSort,
+  updateFilter
 } from './catSlice'
 
 describe('reducers', () => {
@@ -26,7 +37,9 @@ describe('reducers', () => {
     expect(reducer(undefined, { type: undefined })).toEqual({
       fullList: [],
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     })
   })
 
@@ -34,13 +47,17 @@ describe('reducers', () => {
     const previousState: CatState = {
       fullList: [],
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
 
     expect(reducer(previousState, updateCatList(catList))).toEqual({
       fullList: catList,
       favoriteList: [],
-      filteredList: []
+      filteredList: catList,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     })
   })
 
@@ -48,13 +65,17 @@ describe('reducers', () => {
     const previousState: CatState = {
       fullList: [],
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
 
     expect(reducer(previousState, updateFilteredList(catList))).toEqual({
       fullList: [],
       favoriteList: [],
-      filteredList: catList
+      filteredList: catList,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     })
   })
 
@@ -62,13 +83,17 @@ describe('reducers', () => {
     const previousState: CatState = {
       fullList: catList,
       favoriteList: [],
-      filteredList: catList
+      filteredList: catList,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
 
     expect(reducer(previousState, updateFavorite(cat))).toEqual({
       fullList: catListWithFavorite,
       favoriteList: favoriteList,
-      filteredList: catListWithFavorite
+      filteredList: catListWithFavorite,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     })
   })
 
@@ -76,13 +101,17 @@ describe('reducers', () => {
     const previousState: CatState = {
       fullList: catList,
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
 
     expect(reducer(previousState, updateCat(catWithNewImage))).toEqual({
       fullList: catListWithNewImage,
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     })
   })
 
@@ -90,13 +119,109 @@ describe('reducers', () => {
     const previousState: CatState = {
       fullList: catListWithFavorite,
       favoriteList: favoriteList,
-      filteredList: catListWithFavorite
+      filteredList: catListWithFavorite,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
 
     expect(reducer(previousState, updateFavorite(favoriteCat))).toEqual({
       fullList: catListWithFavoriteFalse,
       favoriteList: [],
-      filteredList: catListWithFavoriteFalse
+      filteredList: catListWithFavoriteFalse,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
+    })
+  })
+})
+
+describe('sorting', () => {
+  it('should return full cat list sorted by origin', () => {
+    const previousState: CatState = {
+      fullList: catList,
+      favoriteList: [],
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
+    }
+
+    expect(reducer(previousState, updateSort({ data: 'origin' }))).toEqual({
+      ...previousState,
+      sortParam: { data: 'origin' },
+      filteredList: catListWithSortOrigin
+    })
+  })
+
+  it('should return full cat list sorted by lifespan', () => {
+    const previousState: CatState = {
+      fullList: catList,
+      favoriteList: [],
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
+    }
+
+    expect(reducer(previousState, updateSort({ data: 'lifespan' }))).toEqual({
+      ...previousState,
+      sortParam: { data: 'lifespan' },
+      filteredList: catListWithSortLifeSpan
+    })
+  })
+
+  it('should return full cat list sorted by name', () => {
+    const previousState: CatState = {
+      fullList: catList,
+      favoriteList: [],
+      filteredList: [],
+      sortParam: { data: 'lifespan' },
+      filterParams: initialFilterParams
+    }
+
+    expect(reducer(previousState, updateSort({ data: 'name' }))).toEqual({
+      ...previousState,
+      sortParam: { data: 'name' },
+      filteredList: catListWithSortName
+    })
+  })
+
+  it('should return full cat list sorted by weight', () => {
+    const previousState: CatState = {
+      fullList: catList,
+      favoriteList: [],
+      filteredList: [],
+      sortParam: { data: 'lifespan' },
+      filterParams: initialFilterParams
+    }
+
+    expect(reducer(previousState, updateSort({ data: 'weight' }))).toEqual({
+      ...previousState,
+      sortParam: { data: 'weight' },
+      filteredList: catListWithSortWeight
+    })
+  })
+})
+
+describe('filtering', () => {
+  it('should return full cat list filtered by name, lifespan and weight', () => {
+    const previousState: CatState = {
+      fullList: catListWithFavorite,
+      favoriteList: [],
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
+    }
+
+    const newFilterParams = {
+      name: 'Baby',
+      origin: 'Egy',
+      weight: 7,
+      lifespan: 14,
+      isFavorite: true
+    }
+
+    expect(reducer(previousState, updateFilter(newFilterParams))).toEqual({
+      ...previousState,
+      filterParams: newFilterParams,
+      filteredList: filteredSingleCatList
     })
   })
 })
@@ -106,9 +231,11 @@ describe('selectors', () => {
     const previousState: CatState = {
       fullList: catList,
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
-    expect(selectCatList({ catListSlice: previousState } as RootState)).toEqual(
+    expect(selectCatList({ catSlice: previousState } as RootState)).toEqual(
       catList
     )
   })
@@ -117,32 +244,52 @@ describe('selectors', () => {
     const previousState: CatState = {
       fullList: catListWithFavoriteFalse,
       favoriteList: [],
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
-    expect(
-      selectCat({ catListSlice: previousState } as RootState, cat.id)
-    ).toEqual(cat)
+    expect(selectCat({ catSlice: previousState } as RootState, cat.id)).toEqual(
+      cat
+    )
   })
 
   it('should return favorite cat list', () => {
     const previousState: CatState = {
       fullList: [],
       favoriteList: favoriteList,
-      filteredList: []
+      filteredList: [],
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
-    expect(
-      selectFavorites({ catListSlice: previousState } as RootState)
-    ).toEqual(favoriteList)
+    expect(selectFavorites({ catSlice: previousState } as RootState)).toEqual(
+      favoriteList
+    )
   })
 
   it('should return cat filtered list', () => {
     const previousState: CatState = {
       fullList: [],
       favoriteList: [],
-      filteredList: catList
+      filteredList: catList,
+      sortParam: { data: 'name' },
+      filterParams: initialFilterParams
     }
     expect(
-      selectFilteredList({ catListSlice: previousState } as RootState)
+      selectFilteredList({ catSlice: previousState } as RootState)
     ).toEqual(catList)
+  })
+
+  it('should return filter parameters', () => {
+    const previousState: CatState = {
+      fullList: [],
+      favoriteList: [],
+      filteredList: catList,
+      sortParam: { data: 'weight' },
+      filterParams: initialFilterParams
+    }
+
+    expect(selectSort({ catSlice: previousState } as RootState)).toEqual({
+      data: 'weight'
+    })
   })
 })
