@@ -38,7 +38,7 @@ describe('Filter tab', () => {
     const resetButton = screen.getByTestId('reset-button')
     expect(resetButton).toBeInTheDocument()
 
-    // After reseting the input is cleared
+    // After reset the input is cleared
     fireEvent.click(resetButton)
     expect(nameField?.getAttribute('value')).toBe('')
   })
