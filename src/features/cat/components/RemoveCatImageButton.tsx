@@ -16,6 +16,7 @@ export const RemoveCatImageButton = ({ cat }: Props) => {
     localStorage.removeItem(`cat:${cat.id}`)
     const newCatData = { ...cat, new_image: undefined } as Breed
     dispatch(updateCat(newCatData))
+    window.scrollTo(0, 0)
   }
 
   return (

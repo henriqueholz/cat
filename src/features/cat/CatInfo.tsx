@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { selectCat } from './catSlice'
@@ -46,6 +46,10 @@ export const CatInfo = () => {
     color: theme.palette.text.secondary
   }))
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <>
       {cat !== undefined ? (
@@ -55,26 +59,14 @@ export const CatInfo = () => {
           <RemoveCatImageButton cat={cat} />
           <Item
             sx={{
-              marginBottom: 1,
-              '&:hover': {
-                backgroundColor: 'primary.main',
-                opacity: [0.9, 0.8, 0.7],
-                textAlign: 'center'
-              }
+              marginBottom: 1
             }}
           >
             <Typography>{cat?.description}</Typography>
           </Item>
           <Box sx={{ flexGrow: 1 }}>
             <Grid>
-              <Item
-                sx={{
-                  '&:hover': {
-                    backgroundColor: 'primary.main',
-                    opacity: [0.9, 0.8, 0.7]
-                  }
-                }}
-              >
+              <Item>
                 {catInfoKeys.map(x => (
                   <TextRating
                     label={x}

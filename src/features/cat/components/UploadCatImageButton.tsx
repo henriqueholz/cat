@@ -28,6 +28,7 @@ export const UploadCatImageButton = ({ cat }: Props) => {
       const newCatData = { ...cat, new_image: base64 } as Breed
       dispatch(updateCat(newCatData))
     })
+    window.scrollTo(0, 0)
   }
 
   return (

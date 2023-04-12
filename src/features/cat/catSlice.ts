@@ -6,6 +6,7 @@ const { createSlice } = require('@reduxjs/toolkit')
 
 export interface SortParam {
   data: string,
+  ascending: boolean
 }
 
 export interface FilterParams {
@@ -37,7 +38,7 @@ interface FilterObject {
   active: boolean
 }
 
-export const initialState: CatState = { fullList : [], favoriteList: [], filteredList: [], sortParam: { data: "name"}, filterParams: initialFilterParams};
+export const initialState: CatState = { fullList : [], favoriteList: [], filteredList: [], sortParam: { data: "name", ascending: true}, filterParams: initialFilterParams};
 
 const catSlice = createSlice({
   name: 'CatList',
@@ -81,29 +82,56 @@ const catSlice = createSlice({
     },
     updateSort(state, action: PayloadAction<SortParam>) {
       state.sortParam = action.payload
-      if (action.payload.data === 'name') {
-        state.filteredList = [...state.fullList].sort((a, b) => (a.name > b.name ? 1 : -1)) 
-      } else if (action.payload.data === 'weight') {
-        state.filteredList = 
-            [...state.fullList].sort((a, b) =>
-              parseInt(a.weight.imperial.split('-')[0]) >
-              parseInt(b.weight.imperial.split('-')[0])
-                ? 1
-                : -1
-        )
+      if (action.payload.ascending) {
+        if (action.payload.data === 'name') {
+          state.filteredList = [...state.fullList].sort((a, b) => (a.name > b.name ? 1 : -1)) 
+        } else if (action.payload.data === 'weight') {
+          state.filteredList = 
+              [...state.fullList].sort((a, b) =>
+                parseInt(a.weight.imperial.split('-')[0]) >
+                parseInt(b.weight.imperial.split('-')[0])
+                  ? 1
+                  : -1
+          )
+        } else if (action.payload.data === 'lifespan') {
+          state.filteredList = 
+              [...state.fullList].sort((a, b) =>
+                parseInt(a.life_span.split('-')[0]) >
+                parseInt(b.life_span.split('-')[0])
+                  ? 1
+                  : -1
+              )
 
-      } else if (action.payload.data === 'lifespan') {
-        state.filteredList = 
-            [...state.fullList].sort((a, b) =>
-              parseInt(a.life_span.split('-')[0]) >
-              parseInt(b.life_span.split('-')[0])
-                ? 1
-                : -1
-            )
+        } else if (action.payload.data === 'origin') {
+          state.filteredList = 
+              [...state.fullList].sort((a, b) => (a.origin > b.origin ? 1 : -1))      
+        }
+      } else {
+        if (action.payload.data === 'name') {
+          state.filteredList = [...state.fullList].sort((a, b) => (a.name > b.name ? -1 : 1)) 
 
-      } else if (action.payload.data === 'origin') {
-        state.filteredList = 
-            [...state.fullList].sort((a, b) => (a.origin > b.origin ? 1 : -1))      }
+        } else if (action.payload.data === 'weight') {
+          state.filteredList = 
+              [...state.fullList].sort((a, b) =>
+                parseInt(a.weight.imperial.split('-')[0]) >
+                parseInt(b.weight.imperial.split('-')[0])
+                  ? -1
+                  : 1
+          )
+        } else if (action.payload.data === 'lifespan') {
+          state.filteredList = 
+              [...state.fullList].sort((a, b) =>
+                parseInt(a.life_span.split('-')[0]) >
+                parseInt(b.life_span.split('-')[0])
+                  ? -1
+                  : 1
+              )
+        } else if (action.payload.data === 'origin') {
+          state.filteredList = 
+              [...state.fullList].sort((a, b) => (a.origin > b.origin ? -1 : 1))      
+        }
+      }
+
 
     },
     updateFilter(state, action: PayloadAction<FilterParams>) {
