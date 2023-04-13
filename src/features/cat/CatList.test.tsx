@@ -10,15 +10,21 @@ describe('CatList', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
+  it('should be able render a cat image correctly', async () => {
+    const store = setupStore()
+    store.dispatch(updateFilteredList(catList))
+    renderWithProviders(<CatList />, { store })
+
+    const catCard = screen.getByTestId('cat-card-babys')
+    expect(catCard).toBeInTheDocument()
+  })
+
   it('should render sort tab correctly', async () => {
     const store = setupStore()
     store.dispatch(updateFilteredList(catList))
     renderWithProviders(<CatList />, { store })
     const sortSelect = screen.getByTestId('sort-select')
     expect(sortSelect).toBeInTheDocument()
-
-    const catCard = screen.getByTestId('cat-card-babys')
-    expect(catCard).toBeInTheDocument()
   })
 
   it('should render filter tab correctly', async () => {

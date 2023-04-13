@@ -11,6 +11,15 @@ describe('Cat info', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
+  it('should be able render a cat image correctly', async () => {
+    const store = setupStore()
+    store.dispatch(updateCatList(catList))
+    renderWithProviders(<CatInfo />, { store })
+
+    const catCard = screen.getByTestId('cat-card-babys')
+    expect(catCard).toBeInTheDocument()
+  })
+
   it('should be able to upload and remove a private cat image', async () => {
     const store = setupStore()
     store.dispatch(updateCatList(catList))
@@ -22,9 +31,6 @@ describe('Cat info', () => {
     const file = new File(['test'], 'test.png', { type: 'image/png' })
 
     await userEvent.upload(uploadImageInput, file)
-
-    const catCard = screen.getByTestId('cat-card-babys')
-    expect(catCard).toBeInTheDocument()
 
     expect(localStorage.getItem(`cat:babys`)).toBeTruthy()
     renderWithProviders(<CatInfo />)
